@@ -21,7 +21,7 @@ spec:
     - ReadWriteOnce
   nfs:
     path: /data/nfs/prometheus_data
-    server: 192.168.31.61
+    server: 192.168.31.250
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -51,6 +51,7 @@ spec:
     spec:
       priorityClassName: system-cluster-critical
       serviceAccountName: prometheus
+      serviceAccount: prometheus
       initContainers:
       - name: "init-chown-data"
         image: "busybox:latest"
@@ -117,18 +118,12 @@ spec:
             - name: prometheus-data
               mountPath: /data
               subPath: ""
-            - name: prometheus-rules
-              mountPath: /etc/config/rules
 
       terminationGracePeriodSeconds: 300
       volumes:
         - name: config-volume
           configMap:
             name: prometheus-config
-        - name: prometheus-rules
-          configMap:
-            name: prometheus-rules
         - name: prometheus-data
           persistentVolumeClaim:
             claimName: prometheus-data
-

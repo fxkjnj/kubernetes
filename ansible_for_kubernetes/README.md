@@ -9,7 +9,7 @@
 # cd /kubernetes/ansible_for_kubernetes
 ```
 
-下载软件包并解压/root目录：
+下载软件包并解压到 /root/binary_pkg 目录下：
 
 链接: https://pan.baidu.com/s/1wtlLynltLCpNVGzSQ0jUJA 
 提取码: y5ad

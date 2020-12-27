@@ -1,0 +1,39 @@
+---
+- name: 允许Node加入集群
+  ignore_errors: yes
+  shell: kubectl certificate approve $(kubectl get csr |awk 'NR!=1{print $1}')
+
+- name: 拷贝YAML文件到Master
+  copy: src={{ item }} dest={{ tmp_dir }}
+  with_fileglob:
+    - "*.yaml"
+
+- name: 部署Flannel,Dashboard,CoreDNS,Ingress
+  ignore_errors: yes
+  shell: |
+         cd {{ tmp_dir }}
+         for yaml in $(ls *.yaml);do kubectl apply -f $yaml;done
+
+- name: 查看Pod状态
+  shell: kubectl get all --all-namespaces
+  register: getall
+- debug: var=getall.stdout_lines
+
+- name: 创建Dashboard管理员令牌
+  ignore_errors: yes 
+  shell: |
+         kubectl create serviceaccount dashboard-admin -n kubernetes-dashboard
+         kubectl create clusterrolebinding dashboard-admin --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:dashboard-admin
+
+- name: 获取Dashboard管理员令牌
+  ignore_errors: yes
+  shell: |
+         web='https://NodeIP:30001'
+         token=$(kubectl describe secrets -n kubernetes-dashboard \
+         $(kubectl get secret -n kubernetes-dashboard | awk '/dashboard-admin/{print $1}') |awk '/^token/{print $2}')
+         echo "访问地址--->$web"
+         echo "令牌内容--->$token" 
+  register: ui
+- name: Kubernetes Dashboard登录信息
+  debug: var=ui.stdout_lines
+

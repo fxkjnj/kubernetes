@@ -1,0 +1,9 @@
+{
+  "registry-mirrors": ["https://b9pmyelo.mirror.aliyuncs.com"],
+  "insecure-registries": ["192.168.31.70"],
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "100m"
+  },
+  "storage-driver": "overlay2"
+}

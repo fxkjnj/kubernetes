@@ -1,0 +1,24 @@
+{% set number=cert_hosts.etcd | length %}
+{
+    "CN": "etcd",
+    "hosts": [
+    {% for ip in cert_hosts.etcd %}
+      {% if number == loop.index %}
+          "{{ ip }}"
+      {% else %}
+          "{{ ip }}",
+      {% endif %}
+    {% endfor %}
+    ],
+    "key": {
+        "algo": "rsa",
+        "size": 2048
+    },
+    "names": [
+        {
+            "C": "CN",
+            "L": "BeiJing",
+            "ST": "BeiJing"
+        }
+    ]
+}

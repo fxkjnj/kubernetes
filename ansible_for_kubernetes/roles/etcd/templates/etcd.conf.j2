@@ -1,0 +1,16 @@
+
+{% set local_ip = inventory_hostname %}
+
+#[Member]
+ETCD_NAME="{{ etcd_name }}"
+ETCD_DATA_DIR="/var/lib/etcd/default.etcd"
+ETCD_LISTEN_PEER_URLS="https://{{ local_ip }}:2380"
+ETCD_LISTEN_CLIENT_URLS="https://{{ local_ip }}:2379"
+
+#[Clustering]
+ETCD_INITIAL_ADVERTISE_PEER_URLS="https://{{ local_ip }}:2380"
+ETCD_ADVERTISE_CLIENT_URLS="https://{{ local_ip }}:2379"
+{#获取主机组变量#}
+ETCD_INITIAL_CLUSTER="{% for host in groups['etcd'] %}{{ hostvars[host].etcd_name }}=https://{{ hostvars[host].inventory_hostname }}:2380{% if not loop.last %},{% endif %}{% endfor %}"
+ETCD_INITIAL_CLUSTER_TOKEN="etcd-cluster"
+ETCD_INITIAL_CLUSTER_STATE="new"

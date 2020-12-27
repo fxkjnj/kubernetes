@@ -1,0 +1,6 @@
+ETCDCTL_API=3 {{ etcd_work_dir }}/bin/etcdctl \
+--cacert={{ etcd_work_dir }}/ssl/ca.pem \
+--cert={{ etcd_work_dir }}/ssl/server.pem \
+--key={{ etcd_work_dir }}/ssl/server-key.pem \
+--endpoints={% for host in groups['etcd'] %}https://{{ hostvars[host].inventory_hostname }}:2379{% if not loop.last %},{% endif %}{% endfor %} \
+endpoint health

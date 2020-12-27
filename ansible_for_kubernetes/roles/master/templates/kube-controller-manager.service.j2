@@ -1,0 +1,11 @@
+[Unit]
+Description=Kubernetes Controller Manager
+Documentation=https://github.com/kubernetes/kubernetes
+
+[Service]
+EnvironmentFile={{ k8s_work_dir }}/cfg/kube-controller-manager.conf
+ExecStart={{ k8s_work_dir }}/bin/kube-controller-manager $KUBE_CONTROLLER_MANAGER_OPTS
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

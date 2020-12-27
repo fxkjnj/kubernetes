@@ -1,0 +1,41 @@
+{% if lb_name == 'lb-master' %}
+  {% set role = 'MASTER' %}
+  {% set priority = 100 %}
+{% elif lb_name == 'lb-backup' %}
+  {% set role = 'BACKUP' %}
+  {% set priority = 90 %}
+{% endif %}
+ 
+global_defs { 
+   notification_email { 
+     acassen@firewall.loc 
+     failover@firewall.loc 
+     sysadmin@firewall.loc 
+   } 
+   notification_email_from Alexandre.Cassen@firewall.loc  
+   smtp_server 127.0.0.1 
+   smtp_connect_timeout 30 
+   router_id NGINX_{{ role }}
+} 
+
+vrrp_script check_nginx {
+    script "/etc/keepalived/check_nginx.sh"
+}
+
+vrrp_instance VI_1 { 
+    state {{ role }} 
+    interface {{ nic }}
+    virtual_router_id 51 # VRRP 路由 ID实例，每个实例是唯一的 
+    priority {{  priority }}    # 优先级，备服务器设置 90 
+    advert_int 1    # 指定VRRP 心跳包通告间隔时间，默认1秒 
+    authentication { 
+        auth_type PASS      
+        auth_pass 1111 
+    }  
+    virtual_ipaddress { 
+        {{ vip }}/24
+    } 
+    track_script {
+        check_nginx
+    } 
+}

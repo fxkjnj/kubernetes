@@ -1,0 +1,21 @@
+---
+- name: 0.系统初始化
+  gather_facts: false
+  hosts: newnode 
+  roles:
+    - common
+  tags: common 
+
+- name: 1.部署Docker
+  gather_facts: false
+  hosts: newnode
+  roles:
+    - docker 
+  tags: docker
+
+- name: 2.部署K8S Node
+  gather_facts: false
+  hosts: newnode
+  roles:
+    - node
+  tags: node

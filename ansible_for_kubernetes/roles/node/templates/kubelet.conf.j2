@@ -1,0 +1,10 @@
+KUBELET_OPTS="--logtostderr=false \
+--v=4 \
+--log-dir={{ k8s_work_dir }}/logs \
+--hostname-override={{ node_name }} \
+--network-plugin=cni \
+--kubeconfig={{ k8s_work_dir }}/cfg/kubelet.kubeconfig \
+--bootstrap-kubeconfig={{ k8s_work_dir }}/cfg/bootstrap.kubeconfig \
+--config={{ k8s_work_dir }}/cfg/kubelet-config.yml \
+--cert-dir={{ k8s_work_dir }}/ssl \
+--pod-infra-container-image=lizhenliang/pause-amd64:3.0"

@@ -1,0 +1,41 @@
+---
+- name: 获取Ansible工作目录
+  shell: pwd |sed 's#roles/tls##' 
+  register: root_dir 
+
+- name: 创建工作目录
+  file: dest={{ root_dir.stdout }}/ssl/{{ item }} state=directory
+  with_items:
+    - etcd
+    - k8s
+
+- name: 准备cfssl工具
+  unarchive: src={{ software_dir }}/cfssl.tar.gz dest=/usr/bin/ mode=u+x
+
+- name: 准备etcd证书请求文件
+  template: src=etcd/{{ item }} dest={{ root_dir.stdout }}/ssl/etcd/{{ item.split('.')[:-1]|join('.') }}
+  with_items:
+    - ca-config.json.j2
+    - ca-csr.json.j2
+    - server-csr.json.j2
+
+- name: 准备生成etcd证书脚本
+  copy: src=generate_etcd_cert.sh dest={{ root_dir.stdout }}/ssl/etcd mode=u+x
+
+- name: 生成etcd证书
+  shell: cd {{ root_dir.stdout }}/ssl/etcd && /bin/bash generate_etcd_cert.sh
+
+- name: 准备k8s证书请求文件
+  template: src=k8s/{{ item }} dest={{ root_dir.stdout }}/ssl/k8s/{{ item.split('.')[:-1]|join('.') }}
+  with_items:
+    - ca-config.json.j2  
+    - ca-csr.json.j2  
+    - server-csr.json.j2
+    - admin-csr.json.j2
+    - kube-proxy-csr.json.j2  
+
+- name: 准备生成k8s证书脚本
+  copy: src=generate_k8s_cert.sh dest={{ root_dir.stdout }}/ssl/k8s mode=u+x
+
+- name: 生成k8s证书 
+  shell: cd {{ root_dir.stdout }}/ssl/k8s && /bin/bash generate_k8s_cert.sh

@@ -1,0 +1,34 @@
+# 安装目录 
+software_dir: '/root/binary_pkg'
+k8s_work_dir: '/opt/kubernetes'
+etcd_work_dir: '/opt/etcd'
+tmp_dir: '/tmp/k8s'
+
+# 集群网络
+service_cidr: '10.0.0.0/24'
+cluster_dns: '10.0.0.2'   # 与roles/addons/files/coredns.yaml中IP一致，并且是service_cidr中的IP
+pod_cidr: '10.244.0.0/16' # 与roles/addons/files/kube-flannel.yaml中网段一致
+service_nodeport_range: '30000-32767'
+cluster_domain: 'cluster.local'
+
+# 高可用，如果部署单Master，该项忽略
+vip: '192.168.31.88'
+nic: 'ens33' 
+
+# 自签证书可信任IP列表，为方便扩展，可添加多个预留IP
+cert_hosts:
+  # 包含所有LB、VIP、Master IP和service_cidr的第一个IP
+  k8s:
+    - 10.0.0.1
+    - 192.168.31.61
+    - 192.168.31.62
+    - 192.168.31.63
+    - 192.168.31.71
+    - 192.168.31.72
+    - 192.168.31.73
+    - 192.168.31.88
+  # 包含所有etcd节点IP
+  etcd:
+    - 192.168.31.61
+    - 192.168.31.62
+    - 192.168.31.63

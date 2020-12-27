@@ -1,0 +1,79 @@
+---
+- name: 创建工作目录
+  file: dest={{ k8s_work_dir }}/{{ item }} state=directory
+  with_items:
+    - bin
+    - cfg
+    - ssl
+    - logs
+
+- name: 创建etcd证书目录
+  file: dest={{ k8s_work_dir }}/ssl/etcd state=directory
+
+- name: 创建临时目录
+  file: dest={{ tmp_dir }} state=directory
+
+- name: 分发并解压k8s二进制包
+  unarchive: src={{ item }} dest={{ tmp_dir }}
+  with_fileglob:
+    - "{{ software_dir }}/kubernetes-*.tar.gz"
+
+- name: 移动k8s master二进制文件
+  shell: cp -rf {{ tmp_dir }}/kubernetes/server/bin/{kube-apiserver,kube-controller-manager,kube-scheduler} {{ k8s_work_dir }}/bin && \
+         cp -rf {{ tmp_dir }}/kubernetes/server/bin/kubectl /usr/bin
+
+- name: 分发k8s证书
+  copy: src=k8s_cert/{{ item }} dest={{ k8s_work_dir }}/ssl
+  with_items:
+    - ca.pem
+    - ca-key.pem
+    - server.pem
+    - server-key.pem
+
+- name: 分发etcd证书
+  copy: src=etcd_cert/{{ item }} dest={{ k8s_work_dir }}/ssl/etcd
+  with_items:
+    - ca.pem
+    - server.pem
+    - server-key.pem
+
+- name: 分发token文件
+  copy: src=token.csv dest={{ k8s_work_dir }}/cfg
+
+- name: 分发k8s配置文件
+  template: src={{ item }} dest={{ k8s_work_dir }}/cfg/{{ item.split('.')[:-1]|join('.') }}
+  with_items:
+    - kube-apiserver.conf.j2
+    - kube-controller-manager.conf.j2
+    - kube-scheduler.conf.j2
+
+- name: 分发service文件
+  template: src={{ item }} dest=/usr/lib/systemd/system/{{ item.split('.')[:-1]|join('.') }}
+  with_items:
+    - kube-apiserver.service.j2
+    - kube-controller-manager.service.j2
+    - kube-scheduler.service.j2
+
+- name: 启动k8s master组件
+  systemd: name={{ item }} state=restarted enabled=yes daemon_reload=yes
+  with_items:
+    - kube-apiserver
+    - kube-controller-manager
+    - kube-scheduler
+
+- name: 查看集群状态
+  shell: sleep 3 && kubectl get cs
+  register: cs
+- debug: var=cs.stdout_lines
+
+- name: 拷贝RBAC文件
+  copy: src={{ item }} dest={{ tmp_dir }}
+  with_items:
+    - kubelet-bootstrap-rbac.yaml
+    - apiserver-to-kubelet-rbac.yaml
+
+- name: 授权APIServer访问Kubelet与授权kubelet bootstrap
+  ignore_errors: yes
+  shell: sleep 3 && kubectl apply -f {{ tmp_dir }}/apiserver-to-kubelet-rbac.yaml && \
+         kubectl apply -f {{ tmp_dir }}/kubelet-bootstrap-rbac.yaml
+

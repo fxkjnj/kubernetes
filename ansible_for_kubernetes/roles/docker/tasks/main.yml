@@ -1,0 +1,28 @@
+---
+- name: 创建临时目录
+  file: dest={{ tmp_dir }} state=directory
+
+- name: 分发并解压docker二进制包
+  unarchive: src={{ item }} dest={{ tmp_dir }}
+  with_fileglob:
+    - "{{ software_dir }}/docker-*.tgz"
+
+- name: 移动docker二进制文件
+  shell: cp -rf {{ tmp_dir }}/docker/* /usr/bin
+
+- name: 分发service文件
+  copy: src=docker.service dest=/usr/lib/systemd/system/
+
+- name: 创建目录
+  file: dest=/etc/docker state=directory
+
+- name: 配置docker
+  copy: src=daemon.json dest=/etc/docker/daemon.json
+
+- name: 启动docker
+  systemd: name=docker state=restarted enabled=yes daemon_reload=yes
+
+- name: 查看状态
+  shell: docker info
+  register: docker 
+- debug: var=docker.stdout_lines

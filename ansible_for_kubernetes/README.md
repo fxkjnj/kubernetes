@@ -5,16 +5,18 @@
 下载Ansible部署文件：
 
 ```
-# git clone https://github.com/lizhenliang/ansible-install-k8s
-# cd ansible-install-k8s
+# git clone https://github.com/fxkjnj/kubernetes.git
+# cd /kubernetes/ansible_for_kubernetes
 ```
 
 下载软件包并解压/root目录：
 
-链接：https://pan.baidu.com/s/1EWnJoJjAD3GNqghOwgodWQ 
-提取码：tlvz
+链接: https://pan.baidu.com/s/1wtlLynltLCpNVGzSQ0jUJA 
+提取码: y5ad
 ```
-# tar zxf binary_pkg.tar.gz
+# mkdir /root/binary_pkg
+# tar zxf binary_pkg.tar.gz -C /root/binary_pkg
+# 
 ```
 ### 2、修改Ansible文件
 
@@ -35,12 +37,7 @@ cert_hosts:
   etcd:
 ```
 ## 3、一键部署
-### 架构图
-单Master架构
-![avatar](https://github.com/lizhenliang/ansible-install-k8s/blob/master/single-master.jpg)
 
-多Master架构
-![avatar](https://github.com/lizhenliang/ansible-install-k8s/blob/master/multi-master.jpg)
 ### 部署命令
 单Master版：
 ```
@@ -74,6 +71,3 @@ kubectl get csr
 kubectl certificate approve node-csr-xxx
 ```
 
-视频教程：https://ke.qq.com/course/266656
-
-![avatar](https://github.com/lizhenliang/Shell-Python-Document/blob/master/%E8%81%94%E7%B3%BB%E6%96%B9%E5%BC%8F.png)

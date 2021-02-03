@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-rules
+  namespace: kube-system
+data:
+  general.rules: |
+    groups:
+    - name: general.rules
+      rules:
+      - alert: InstanceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: error 
+        annotations:
+          summary: "Instance {{ $labels.instance }} 停止工作"
+          description: "{{ $labels.instance }} job {{ $labels.job }} 已经停止5分钟以上."

@@ -1,0 +1,30 @@
+env:
+  JAVA_OPTS: -Xmx1g
+image:
+  pullPolicy: IfNotPresent
+  repository: lizhenliang/java-demo
+  tag: latest
+imagePullSecrets: []
+ingress:
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 100m
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+  enabled: false
+  host: example.ctnrs.com
+  tls: []
+nodeSelector: {}
+replicaCount: 3
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+service:
+  port: 80
+  targetPort: 80
+  type: ClusterIP
+tolerations: []

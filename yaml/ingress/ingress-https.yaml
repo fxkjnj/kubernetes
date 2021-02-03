@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: example-nginx-ingress-https
+spec:
+  tls:
+  - hosts:
+    - nginx.demo.com
+    secretName: nginx-demo-com
+  rules:
+    - host: nginx.demo.com
+      http:
+        paths:
+        - path: /
+          backend:
+            serviceName: web-1
+            servicePort: 80

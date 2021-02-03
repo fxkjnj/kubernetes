@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: example-dashboard-ingress-https
+spec:
+  tls:
+  - hosts:
+    - dashboard.k8s.com
+    secretName: example-dashboard-ingress-https
+  rules:
+    - host: dashboard.k8s.com
+      http:
+        paths:
+        - path: /
+          backend:
+            serviceName: kubernetes-dashboard
+            servicePort: 443

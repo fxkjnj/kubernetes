@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: snippet.nginx
+  annotations:
+     kubernetes.io/ingress.class: nginx
+     nginx.ingress.kubernetes.io/server-snippet: |
+      if ($http_user_agent ~* '(chrom|firefox)') {
+       rewrite ^/(.*) http://fxkjnj.com break;
+      }
+
+spec:
+  rules:
+  - host: snippet.nginx.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          serviceName: web-1
+          servicePort: 80

@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: configmap-demo-pod
+spec:
+  containers:
+   - name: demo
+     image: nginx
+     env:
+      - name: ABCD
+        valueFrom:
+          configMapKeyRef:
+            name: configmap-demo
+            key: abc
+      - name: CDEF
+        valueFrom:
+          configMapKeyRef:
+            name: configmap-demo
+            key: cde
+     volumeMounts:
+     - name: config
+       mountPath: "/config"
+       readOnly: true
+  volumes:
+   - name: config
+     configMap:
+      name: configmap-demo
+      items:
+      - key: "redis.properties"
+        path: "redis.properties"

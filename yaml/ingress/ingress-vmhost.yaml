@@ -1,0 +1,24 @@
+---
+# http
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: web-1-2
+spec:
+  rules:
+  - host: web-1.nginx.com
+    http:
+      paths:
+      - path: "/"
+        pathType: Prefix
+        backend:
+          serviceName: web-1
+          servicePort: 80
+  - host: web-2.nginx.com
+    http:
+      paths:
+      - path: "/"
+        pathType: Prefix
+        backend:
+          serviceName: web-2
+          servicePort: 80

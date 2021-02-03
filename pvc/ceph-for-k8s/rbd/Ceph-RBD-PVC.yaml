@@ -1,0 +1,11 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ceph-rdb-claim
+spec:
+  accessModes:     
+    - ReadWriteOnce
+  storageClassName: dynamic-ceph-rdb
+  resources:
+    requests:
+      storage: 2Gi

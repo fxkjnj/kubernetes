@@ -8,6 +8,6 @@ k8s-prometheus                【 prometheus 监控 for  k8s】
 mysql-deployment              【基于deployment 方式在k8s 中部署单节点Mysql】
 pvc                           【k8s pvc 持久化存储卷】
 yaml                          【常用yaml 文件】
-❥(^_-)  v1
+
 
                                                             2021/02/03 ❥(^_-)        

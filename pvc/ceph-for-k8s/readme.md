@@ -1,4 +1,4 @@
-PV、PVC概述
+#PV、PVC概述
 
 管理存储是管理计算的一个明显问题。PersistentVolume子系统为用户和管理员提供了一个API，用于抽象如何根据消费方式提供存储的详细信息。于是引入了两个新的API资源：PersistentVolume和PersistentVolumeClaim
 
@@ -11,7 +11,7 @@ PV、PVC概述
 >StorageClass为集群提供了一种描述他们提供的存储的“类”的方法。 不同的类可能映射到服务质量级别，或备份策略，或者由群集管理员确定的任意策略。 Kubernetes本身对于什么类别代表是不言而喻的。 这个概念有时在其他存储系统中称为“配置文件”
 
 
-POD动态供给   
+##POD动态供给   
 
 >动态供给主要是能够自动帮你创建pv，需要多大的空间就创建多大的pv。k8s帮助创建pv，创建pvc就直接api调用存储类来寻找pv。
 
@@ -23,11 +23,11 @@ POD动态供给
 
 ￼
 
-pod 使用ceph 作为存储需求外部的支持，参考案例：
+## pod 使用ceph 作为存储需求外部的支持，参考案例：
 https://github.com/ajaynemade/K8s-Ceph
 ￼
 
-POD使用ceph RBD做为持久数据卷
+#POD使用ceph RBD做为持久数据卷
 
 1、在ceph 中配置 RBD
 
@@ -266,6 +266,246 @@ this is a ceph rbd
 
 
 
+
+
+# POD使用CephFS做为持久数据卷
+CephFS方式支持k8s的pv的3种访问模式ReadWriteOnce，ReadOnlyMany ，ReadWriteMany
+## Ceph端创建CephFS pool
+
+1、如下操作在ceph的mon或者admin节点
+CephFS需要使用两个Pool来分别存储数据和元数据
+```
+ceph osd pool create fs_data 128
+ceph osd pool create fs_metadata 128
+ceph osd lspools
+```
+2、创建一个CephFS
+```
+ceph fs new cephfs fs_metadata fs_data
+```
+3、查看
+```
+ceph fs ls
+```
+
+## 部署 cephfs-provisioner
+1、使用社区提供的cephfs-provisioner
+```
+cat >external-storage-cephfs-provisioner.yaml<<EOF
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cephfs-provisioner
+  namespace: kube-system
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cephfs-provisioner
+rules:
+  - apiGroups: [""]
+    resources: ["persistentvolumes"]
+    verbs: ["get", "list", "watch", "create", "delete"]
+  - apiGroups: [""]
+    resources: ["persistentvolumeclaims"]
+    verbs: ["get", "list", "watch", "update"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["storageclasses"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["create", "update", "patch"]
+  - apiGroups: [""]
+    resources: ["endpoints"]
+    verbs: ["get", "list", "watch", "create", "update", "patch"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["create", "get", "delete"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cephfs-provisioner
+subjects:
+  - kind: ServiceAccount
+    name: cephfs-provisioner
+    namespace: kube-system
+roleRef:
+  kind: ClusterRole
+  name: cephfs-provisioner
+  apiGroup: rbac.authorization.k8s.io
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: cephfs-provisioner
+  namespace: kube-system
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["create", "get", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: cephfs-provisioner
+  namespace: kube-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: cephfs-provisioner
+subjects:
+- kind: ServiceAccount
+  name: cephfs-provisioner
+  namespace: kube-system
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cephfs-provisioner
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      app: cephfs-provisioner
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: cephfs-provisioner
+    spec:
+      containers:
+      - name: cephfs-provisioner
+        image: "quay.io/external_storage/cephfs-provisioner:latest"
+        env:
+        - name: PROVISIONER_NAME
+          value: ceph.com/cephfs
+        command:
+        - "/usr/local/bin/cephfs-provisioner"
+        args:
+        - "-id=cephfs-provisioner-1"
+      serviceAccount: cephfs-provisioner
+EOF
+kubectl apply -f external-storage-cephfs-provisioner.yaml
+```
+2、查看状态 等待running之后 再进行后续的操作
+```
+kubectl get pod -n kube-system
+```
+## 配置 storageclass
+1、查看key 在ceph的mon或者admin节点
+```
+ceph auth get-key client.admin
+```
+2、创建 admin secret
+```
+kubectl create secret generic ceph-secret --type="kubernetes.io/rbd" \
+--from-literal=key=AQCtovZdgFEhARAAoKhLtquAyM8ROvmBv55Jig== \
+--namespace=kube-system
+
+```
+3、查看 secret
+```
+kubectl get secret ceph-secret -n kube-system -o yaml
+```
+4、配置 StorageClass
+```
+cat >storageclass-cephfs.yaml<<EOF
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: dynamic-cephfs
+provisioner: ceph.com/cephfs
+parameters:
+    monitors: 10.151.30.125:6789,10.151.30.126:6789,10.151.30.127:6789
+    adminId: admin
+    adminSecretName: ceph-secret
+    adminSecretNamespace: "kube-system"
+    claimRoot: /volumes/kubernetes
+EOF
+```
+5、创建
+```
+kubectl apply -f storageclass-cephfs.yaml
+```
+6、查看
+```
+kubectl get sc
+```
+## 测试使用
+1、创建pvc测试
+```
+cat >cephfs-pvc-test.yaml<<EOF
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: cephfs-claim
+spec:
+  accessModes:     
+    - ReadWriteMany
+  storageClassName: dynamic-cephfs
+  resources:
+    requests:
+      storage: 2Gi
+EOF
+kubectl apply -f cephfs-pvc-test.yaml
+```
+2、查看
+```
+kubectl get pvc
+kubectl get pv
+```
+3、创建 nginx pod 挂载测试
+```
+cat >nginx-pod.yaml<<EOF
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod2
+  labels:
+    name: nginx-pod2
+spec:
+  containers:
+  - name: nginx-pod2
+    image: nginx
+    ports:
+    - name: web
+      containerPort: 80
+    volumeMounts:
+    - name: cephfs
+      mountPath: /usr/share/nginx/html
+  volumes:
+  - name: cephfs
+    persistentVolumeClaim:
+      claimName: cephfs-claim
+EOF
+kubectl apply -f nginx-pod.yaml
+```
+ 4、查看
+ ```
+kubectl get pods -o wide
+ ```
+ 5、修改文件内容
+ ```
+kubectl exec -ti nginx-pod2 -- /bin/sh -c 'echo This is from CephFS!!! > /usr/share/nginx/html/index.html'
+```
+6、访问pod测试
+```
+curl http://$podip
+```
+7、清理
+```
+kubectl delete -f nginx-pod.yaml
+kubectl delete -f cephfs-pvc-test.yaml
+```
+
+
+
+
 ================================================================
 补充：
 k8s通过rbd使用ceph，pvc在线扩容
@@ -306,5 +546,18 @@ spec:
 
 #查看pvc大小是否更新完成，或者登陆容器检查挂载分区是否扩容成功
 kubectl get pvc
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

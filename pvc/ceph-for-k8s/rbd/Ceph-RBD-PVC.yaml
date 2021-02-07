@@ -8,4 +8,4 @@ spec:
   storageClassName: dynamic-ceph-rdb
   resources:
     requests:
-      storage: 2Gi
+     storage: 2Gi

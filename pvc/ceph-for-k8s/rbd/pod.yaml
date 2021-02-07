@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: httpd-pvpod
+spec:
+  containers:
+  - image: httpd
+    name: httpd-withpvc-pod
+    imagePullPolicy: Always
+    volumeMounts:
+    - mountPath: "/tmp"
+      name: httpd-volume
+  volumes:
+    - name: httpd-volume
+      persistentVolumeClaim:
+        claimName: ceph-rdb-claim

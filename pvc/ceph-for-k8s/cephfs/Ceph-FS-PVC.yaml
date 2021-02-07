@@ -1,0 +1,10 @@
+apiVersion: v1
+metadata:
+  name: cephfs-claim
+spec:
+  accessModes:     
+    - ReadWriteMany
+  storageClassName: dynamic-cephfs
+  resources:
+    requests:
+      storage: 2Gi

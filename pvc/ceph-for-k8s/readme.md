@@ -21,56 +21,66 @@
 打✓ 的表示K8S 默认支持的动态供给的存储
 - 没打 ✓ 的表示K8S 不支持的动态供给的存储，比如 NFS ，cephfs	  需要借助外部的插件去实现动态供给
 
-￼
 
-## pod 使用ceph 作为存储需求外部的支持，参考案例：
+
+##pod 使用ceph 作为存储需求外部的支持，参考案例：
 https://github.com/ajaynemade/K8s-Ceph
-￼
+
+
 
 #POD使用ceph RBD做为持久数据卷
 
-1、在ceph 中配置 RBD
+###、在ceph 中配置 RBD
 
-1、创建pod时，kubelet需要使用rbd命令去检测和挂载pv对应的ceph image，所以要在所有的k8s 的 所有 节点安装ceph客户端 ceph-common （安装之前请先配置好ceph 源）
-
+(1)、创建pod时，kubelet需要使用rbd命令去检测和挂载pv对应的ceph image，所以要在所有的k8s 的 所有 节点安装ceph客户端 ceph-common （安装之前请先配置好ceph 源）
+```
 [root@node-1 ~]# yum -y install ceph-common
+```
 
 将ceph的ceph.client.admin.keyring 和 ceph.conf 文件 拷贝到 k8s master 节点的/etc/ceph目录下
 
 
 
-2、创建 osd pool 在ceph的mon或者admin节点
+(2)、创建 osd pool 在ceph的mon或者admin节点
+```
 ceph osd pool create kube 128 128 
 ceph osd pool ls
+```
 
-
-3、创建k8s访问ceph的用户 在ceph的mon或者admin节点
+(3)、创建k8s访问ceph的用户 在ceph的mon或者admin节点
+```
 ceph auth get-or-create client.kube mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx pool=kube' -o ceph.client.kube.keyring
+```
 
-
-4、查看key 在ceph的mon或者admin节点
+(4)、查看key 在ceph的mon或者admin节点
+```
 ceph auth get-key client.admin
 ceph auth get-key client.kube
+```
 
-
-5、登陆k8s 的master 节点 创建 admin secret
+(5)、登陆k8s 的master 节点 创建 admin secret
+```
 kubectl create secret generic ceph-secret --type="kubernetes.io/rbd" \
 --from-literal=key=AQCtovZdgFEhARAAoKhLtquAyM8ROvmBv55Jig== \
 --namespace=kube-system
+```
 
-
-6、登陆k8s 的master 节点 ,在 default 命名空间创建pvc用于访问ceph的 secret
+(6)、登陆k8s 的master 节点 ,在 default 命名空间创建pvc用于访问ceph的 secret
+```
 kubectl create secret generic ceph-user-secret --type="kubernetes.io/rbd" \
 --from-literal=key=AQAM9PxdEFi3AhAAzvvhuyk1AfN5twlY+4zNMA== \
 --namespace=default
+```
 
 
-2、配置rbd 需要的yaml 文件
+###2、配置rbd 需要的yaml 文件
 RBD支持ReadWriteOnce(单节点读写)，ReadOnlyMany（多节点读写）两种模式
+
+
 （1）、配置rbd-provisioner
-#官方的镜像可能因为网络原因无法下载，建议把镜像地址替换成  feixiangkeji974907/rbd-provisioner:v2.0.0-k8s1.11
+官方的镜像可能因为网络原因无法下载，建议把镜像地址替换成  feixiangkeji974907/rbd-provisioner:v2.0.0-k8s1.11
 
-
+```
 [root@node-1 ~]#  vim Ceph-RBD-Provisioner.yaml
 apiVersion: v1
 kind: ServiceAccount
@@ -168,8 +178,12 @@ spec:
       serviceAccount: rbd-provisioner
 
 [root@node-1 ~]# kubectl apply -f Ceph-RBD-Provisioner.yaml
+```
+
 
 （2）、配置StorageClass
+
+```
 [root@node-1 ~]#  vim Ceph-RBD-StorageClass.yaml
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
@@ -187,10 +201,11 @@ parameters:
   fsType: ext4
   imageFormat: "2"
   imageFeatures: layering
-
+```
 
 （3）、创建pvc 测试
 
+```
 [root@master-1 rbd]# cat Ceph-RBD-PVC.yaml 
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -203,8 +218,9 @@ spec:
   resources:
     requests:
       storage: 2Gi
+```
 
-
+```
 [root@master-1 rbd]# kubectl apply -f Ceph-RBD-PVC.yaml 
 
 [root@master-1 rbd]# kubectl get pvc
@@ -220,8 +236,9 @@ pvc-c878c276-bd96-4227-8a39-e586ab313a88   2Gi        RWO            Delete     
 [root@master-1 rbd]# kubectl get sc
 NAME               PROVISIONER      RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
 dynamic-ceph-rdb   ceph.com/rbd     Delete          Immediate           false                  12m
+```
 
-
+```
 [root@master-1 rbd]# cat nginx-pod.yaml 
 apiVersion: v1
 kind: Pod
@@ -243,17 +260,19 @@ spec:
   - name: ceph-rdb
     persistentVolumeClaim:
       claimName: ceph-rdb-claim
+```
 
 
-
-
+```
 [root@master-1 rbd]#  kubectl apply -f  nginx-pod.yaml 
 
 [root@master-1 rbd]# kubectl get pods
 NAME         READY   STATUS    RESTARTS   AGE
 nginx-pod1   1/1     Running   0          9m54s
+```
 
-
+测试写入数据
+```
 [root@master-1 rbd]# kubectl exec -it nginx-pod1 -- /bin/sh -c 'echo "this is a ceph rbd" > /usr/share/nginx/html/index.html'
 
 [root@master-1 rbd]# kubectl get pods -o wide
@@ -263,13 +282,14 @@ nginx-pod1   1/1     Running   0          14m   10.244.1.112   node-1   <none>  
 
 [root@master-1 rbd]# curl 10.244.1.112
 this is a ceph rbd
-
+```
 
 
 
 
 # POD使用CephFS做为持久数据卷
 CephFS方式支持k8s的pv的3种访问模式ReadWriteOnce，ReadOnlyMany ，ReadWriteMany
+
 ## Ceph端创建CephFS pool
 
 1、如下操作在ceph的mon或者admin节点
@@ -291,7 +311,7 @@ ceph fs ls
 ## 部署 cephfs-provisioner
 1、使用社区提供的cephfs-provisioner
 ```
-cat >external-storage-cephfs-provisioner.yaml<<EOF
+cat >Ceph-FS-Provisioner.yaml<<EOF
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -392,15 +412,18 @@ spec:
 EOF
 kubectl apply -f external-storage-cephfs-provisioner.yaml
 ```
+
 2、查看状态 等待running之后 再进行后续的操作
 ```
 kubectl get pod -n kube-system
 ```
+
 ## 配置 storageclass
 1、查看key 在ceph的mon或者admin节点
 ```
 ceph auth get-key client.admin
 ```
+
 2、创建 admin secret
 ```
 kubectl create secret generic ceph-secret --type="kubernetes.io/rbd" \
@@ -408,13 +431,17 @@ kubectl create secret generic ceph-secret --type="kubernetes.io/rbd" \
 --namespace=kube-system
 
 ```
+
+
 3、查看 secret
 ```
 kubectl get secret ceph-secret -n kube-system -o yaml
 ```
+
+
 4、配置 StorageClass
 ```
-cat >storageclass-cephfs.yaml<<EOF
+cat >Ceph-FS-StorageClass.yaml<<EOF
 kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
@@ -428,10 +455,12 @@ parameters:
     claimRoot: /volumes/kubernetes
 EOF
 ```
+
 5、创建
 ```
 kubectl apply -f storageclass-cephfs.yaml
 ```
+
 6、查看
 ```
 kubectl get sc
@@ -439,7 +468,7 @@ kubectl get sc
 ## 测试使用
 1、创建pvc测试
 ```
-cat >cephfs-pvc-test.yaml<<EOF
+cat >Ceph-FS-PVC.yaml<<EOF
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -454,6 +483,8 @@ spec:
 EOF
 kubectl apply -f cephfs-pvc-test.yaml
 ```
+
+
 2、查看
 ```
 kubectl get pvc
@@ -506,9 +537,9 @@ kubectl delete -f cephfs-pvc-test.yaml
 
 
 
-================================================================
-补充：
-k8s通过rbd使用ceph，pvc在线扩容
+##================================================================
+##补充：k8s通过rbd使用ceph，pvc在线扩容
+
 说明：
 1、storage class 必须支持在线扩容
 2、只能扩容，不能收缩
@@ -516,13 +547,16 @@ k8s通过rbd使用ceph，pvc在线扩容
 
 
 一、查看storageclass是否支持动态扩容
-
+```
 [root@k8s-master03 ~]# kubectl  get storageclass 
 NAME            PROVISIONER         AGE
 cephfs          ceph.com/cephfs     289d
 rbd (default)   kubernetes.io/rbd   289d
+```
 
+```
 [root@k8s-master03 ceph]# kubectl edit storageclasses.storage.k8s.io rbd
+```
 
 查看是否有如下字段( allowVolumeExpansion: true  )
 .......
@@ -531,8 +565,9 @@ metadata:
 allowVolumeExpansion: true   #增加该字段表示允许动态扩容
 ......
 
-二、编辑pvc，修改存储大小，保存退出
 
+二、编辑pvc，修改存储大小，保存退出
+```
 kubectl edit pvc/grafana-pvc -n kube-system
 
 spec:
@@ -541,6 +576,7 @@ spec:
   resources:
     requests:
       storage: 12Gi
+```
 
 三、验证
 

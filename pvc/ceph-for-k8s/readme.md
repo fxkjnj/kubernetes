@@ -23,14 +23,13 @@
 
 
 
-##pod 使用ceph 作为存储需求外部的支持，参考案例：
+# pod 使用ceph 作为存储需求外部的支持，参考案例：
 https://github.com/ajaynemade/K8s-Ceph
 
 
+# POD使用ceph RBD做为持久数据卷
 
-#POD使用ceph RBD做为持久数据卷
-
-###、在ceph 中配置 RBD
+### 在ceph 中配置 RBD
 
 (1)、创建pod时，kubelet需要使用rbd命令去检测和挂载pv对应的ceph image，所以要在所有的k8s 的 所有 节点安装ceph客户端 ceph-common （安装之前请先配置好ceph 源）
 ```

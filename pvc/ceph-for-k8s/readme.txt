@@ -221,3 +221,90 @@ pvc-c878c276-bd96-4227-8a39-e586ab313a88   2Gi        RWO            Delete     
 NAME               PROVISIONER      RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
 dynamic-ceph-rdb   ceph.com/rbd     Delete          Immediate           false                  12m
 
+
+[root@master-1 rbd]# cat nginx-pod.yaml 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod1
+  labels:
+    name: nginx-pod1
+spec:
+  containers:
+  - name: nginx-pod1
+    image: nginx:alpine
+    ports:
+    - name: web
+      containerPort: 80
+    volumeMounts:
+    - name: ceph-rdb
+      mountPath: /usr/share/nginx/html
+  volumes:
+  - name: ceph-rdb
+    persistentVolumeClaim:
+      claimName: ceph-rdb-claim
+
+
+
+
+[root@master-1 rbd]#  kubectl apply -f  nginx-pod.yaml 
+
+[root@master-1 rbd]# kubectl get pods
+NAME         READY   STATUS    RESTARTS   AGE
+nginx-pod1   1/1     Running   0          9m54s
+
+
+[root@master-1 rbd]# kubectl exec -it nginx-pod1 -- /bin/sh -c 'echo "this is a ceph rbd" > /usr/share/nginx/html/index.html'
+
+[root@master-1 rbd]# kubectl get pods -o wide
+NAME         READY   STATUS    RESTARTS   AGE   IP             NODE     NOMINATED NODE   READINESS GATES
+nginx-pod1   1/1     Running   0          14m   10.244.1.112   node-1   <none>           <none>
+
+
+[root@master-1 rbd]# curl 10.244.1.112
+this is a ceph rbd
+
+
+
+================================================================
+补充：
+k8s通过rbd使用ceph，pvc在线扩容
+说明：
+1、storage class 必须支持在线扩容
+2、只能扩容，不能收缩
+3、根据扩容大小，卷扩容需要一定时间
+
+
+一、查看storageclass是否支持动态扩容
+
+[root@k8s-master03 ~]# kubectl  get storageclass 
+NAME            PROVISIONER         AGE
+cephfs          ceph.com/cephfs     289d
+rbd (default)   kubernetes.io/rbd   289d
+
+[root@k8s-master03 ceph]# kubectl edit storageclasses.storage.k8s.io rbd
+
+查看是否有如下字段( allowVolumeExpansion: true  )
+.......
+metadata:
+........
+allowVolumeExpansion: true   #增加该字段表示允许动态扩容
+......
+
+二、编辑pvc，修改存储大小，保存退出
+
+kubectl edit pvc/grafana-pvc -n kube-system
+
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 12Gi
+
+三、验证
+
+#查看pvc大小是否更新完成，或者登陆容器检查挂载分区是否扩容成功
+kubectl get pvc
+
+

@@ -19,7 +19,7 @@ spec:
       initContainers:
       - name: "init-chown-data"
         image: "busybox:latest"
-        imagePullPolicy: "IfNotPresent"
+  #      imagePullPolicy: "IfNotPresent"
         command: ["chown", "-R", "65534:65534", "/data"]
         volumeMounts:
         - name: prometheus-data
@@ -28,7 +28,7 @@ spec:
       containers:
         - name: prometheus-server-configmap-reload
           image: "jimmidyson/configmap-reload:v0.1"
-          imagePullPolicy: "IfNotPresent"
+   #       imagePullPolicy: "IfNotPresent"
           args:
             - --volume-dir=/etc/config
             - --webhook-url=http://localhost:9090/-/reload
@@ -46,7 +46,7 @@ spec:
 
         - name: prometheus-server
           image: "prom/prometheus:v2.20.0"
-          imagePullPolicy: "IfNotPresent"
+    #      imagePullPolicy: "IfNotPresent"
           args:
             - --config.file=/etc/config/prometheus.yml
             - --storage.tsdb.path=/data
@@ -119,7 +119,7 @@ spec:
       port: 9090
       protocol: TCP
       targetPort: 9090
-      nodePort: 30090
+      nodePort: 30089
   selector: 
     k8s-app: prometheus
 ---

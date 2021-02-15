@@ -1,6 +1,6 @@
 # Kubernetes 监控实现思路
-
-![](https://raw.githubusercontent.com/fxkjnj/fxkjnj.github.io/main/%E4%B8%AD%E9%97%B4%E4%BB%B6/kubernetes/promethues%20for%20k8s%E6%B5%81%E7%A8%8B%E5%9B%BE.png)
+![](https://raw.githubusercontent.com/fxkjnj/fxkjnj.github.io/main/%E4%B8%AD%E9%97%B4%E4%BB%B6/kubernetes/1.png)
+![](https://raw.githubusercontent.com/fxkjnj/fxkjnj.github.io/main/%E4%B8%AD%E9%97%B4%E4%BB%B6/kubernetes/2.png)
 
 
 

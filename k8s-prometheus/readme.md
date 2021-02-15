@@ -1,5 +1,4 @@
 # Kubernetes 监控实现思路
-
 ## Pod
 kubelet的节点使用cAdvisor提供的metrics接口获取该节点所有Pod和容器相关的性能指标数据。
 指标接口：https://NodeIP:10250/metrics/cadvisor
@@ -13,6 +12,7 @@ kube-state-metrics采集了k8s中各种资源对象的状态信息。
 项目地址：https://github.com/kubernetes/kube-state-metrics
 
 
+# Kubernetes 平台部署的相关组件&yaml
 
 
 ```

@@ -1,4 +1,9 @@
 # Kubernetes 监控实现思路
+
+![](https://raw.githubusercontent.com/fxkjnj/fxkjnj.github.io/main/%E4%B8%AD%E9%97%B4%E4%BB%B6/kubernetes/promethues%20for%20k8s%E6%B5%81%E7%A8%8B%E5%9B%BE.png)
+
+
+
 ### Pod
 kubelet的节点使用cAdvisor提供的metrics接口获取该节点所有Pod和容器相关的性能指标数据。
 指标接口：https://NodeIP:10250/metrics/cadvisor

@@ -1,9 +1,10 @@
 apiVersion: apps/v1 
-kind: Deployment 
+kind: StatefulSet 
 metadata:
   name: grafana
-  namespace: ops
+  namespace: kube-system
 spec:
+  serviceName: "grafana"
   replicas: 1
   selector:
     matchLabels:
@@ -15,7 +16,7 @@ spec:
     spec:
       containers:
       - name: grafana
-        image: grafana/grafana:7.1.0
+        image: grafana/grafana
         ports:
           - containerPort: 3000
             protocol: TCP
@@ -33,34 +34,29 @@ spec:
       securityContext:
         fsGroup: 472
         runAsUser: 472
-      volumes:
-      - name: grafana-data
-        persistentVolumeClaim:
-          claimName: grafana 
+  volumeClaimTemplates:
+  - metadata:
+      name: grafana-data
+    spec:
+      storageClassName: managed-nfs-storage 
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: "1Gi"
+
 ---
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: grafana 
-  namespace: ops
-spec:
-  storageClassName: "managed-nfs-storage"
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 5Gi
----
+
 apiVersion: v1
 kind: Service
 metadata:
   name: grafana
-  namespace: ops
+  namespace: kube-system
 spec:
   type: NodePort
   ports:
   - port : 80
     targetPort: 3000
-    nodePort: 30030
+    nodePort: 30007
   selector:
     app: grafana

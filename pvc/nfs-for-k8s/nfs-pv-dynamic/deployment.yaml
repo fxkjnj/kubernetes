@@ -32,9 +32,9 @@ spec:
             - name: NFS_SERVER
               value: 192.168.31.100 
             - name: NFS_PATH
-              value: /home/test
+              value: /home/prometheus
       volumes:
         - name: nfs-client-root
           nfs:
             server: 192.168.31.100 
-            path: /home/test
+            path: /home/prometheus

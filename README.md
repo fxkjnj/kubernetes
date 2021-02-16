@@ -5,7 +5,7 @@
 
 ## 【ansible 基于二进制方式 自动化部署k8s集群，包含Node节点的新增】 
 ansible-deploy-k8s      
-
+![](https://raw.githubusercontent.com/fxkjnj/fxkjnj.github.io/main/%E4%B8%AD%E9%97%B4%E4%BB%B6/ansible/1.jpg)
 
 ## 【基于jenkins 发布k8s 微服务项目】
 jenkins-for_kubernetes
@@ -17,10 +17,6 @@ jenkins-for_kubernetes
 k8s-prometheus
 
 ![](https://raw.githubusercontent.com/fxkjnj/fxkjnj.github.io/main/%E4%B8%AD%E9%97%B4%E4%BB%B6/kubernetes/dashboard-3.png)
-
-
-## 【基于deployment 方式在k8s 中部署单节点Mysql】
-mysql-deployment  
 
 
 ## 【常用yaml 文件】

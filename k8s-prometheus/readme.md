@@ -30,3 +30,20 @@ kube-state-metrics.yaml 		#采集K8s资源，并声明让Prometheus收集
 alertmanager-configmap.yaml 		#配置文件，配置发件人和收件人
 alertmanager-deployment.yaml 		#部署Alertmanager告警组件
 ```
+
+
+# Grafana 展示 k8s 监控图
+
+![](https://raw.githubusercontent.com/fxkjnj/fxkjnj.github.io/main/%E4%B8%AD%E9%97%B4%E4%BB%B6/kubernetes/dashboard-1.png)
+
+![](https://raw.githubusercontent.com/fxkjnj/fxkjnj.github.io/main/%E4%B8%AD%E9%97%B4%E4%BB%B6/kubernetes/dashboard-2.png)
+
+![](https://raw.githubusercontent.com/fxkjnj/fxkjnj.github.io/main/%E4%B8%AD%E9%97%B4%E4%BB%B6/kubernetes/dashboard-3.png)
+
+
+
+
+
+
+
+

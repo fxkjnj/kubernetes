@@ -1,6 +1,6 @@
 ❥(^_-)  v1
 
-## 分享一些 平时工作中的K8S 运维经验，yaml 文件； 详细内容 请关注 我的个人博客 ： https://fxkjnj.com
+分享一些 平时工作中的K8S 运维经验，yaml 文件； 详细内容 请关注 我的个人博客 ： https://fxkjnj.com
 
 
 ## 【ansible 基于二进制方式 自动化部署k8s集群，包含Node节点的新增】 

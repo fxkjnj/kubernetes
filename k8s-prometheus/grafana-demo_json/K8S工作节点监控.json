@@ -12,53 +12,6 @@
       }
     ]
   },
-  "description": "支持 Node Exporter v0.16及以上的版本，精简优化重要指标展示。包含：CPU 内存 磁盘 IO 网络 温度等监控指标。https://github.com/starsliao/Prometheus",
-  "editable": true,
-  "gnetId": 8919,
-  "graphTooltip": 0,
-  "id": 6,
-  "iteration": 1576721657687,
-  "links": [
-    {
-      "asDropdown": false,
-      "icon": "info",
-      "includeVars": false,
-      "tags": [
-        "$node"
-      ],
-      "targetBlank": true,
-      "title": "服务器IP：$node",
-      "type": "link",
-      "url": ""
-    },
-    {
-      "icon": "external link",
-      "tags": [],
-      "targetBlank": true,
-      "title": "更新node_exporter",
-      "tooltip": "",
-      "type": "link",
-      "url": "https://github.com/prometheus/node_exporter/releases"
-    },
-    {
-      "icon": "external link",
-      "tags": [],
-      "targetBlank": true,
-      "title": "更新当前仪表板",
-      "tooltip": "",
-      "type": "link",
-      "url": "https://grafana.com/dashboards/8919"
-    },
-    {
-      "icon": "external link",
-      "tags": [],
-      "targetBlank": true,
-      "title": "StarsL's Blog",
-      "tooltip": "",
-      "type": "link",
-      "url": "https://starsl.cn"
-    }
-  ],
   "panels": [
     {
       "cacheTimeout": null,

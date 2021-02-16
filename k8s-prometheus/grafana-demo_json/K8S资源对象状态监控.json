@@ -12,25 +12,6 @@
       }
     ]
   },
-  "description": "Summary metrics about containers running on Kubernetes nodes.\r\n\r\nDashboard was taken from here.  This version does not reqiure you to\r\nsetup the Kubernetes-app plugin. (https://github.com/grafana/kubernetes-app)\r\n\r\nUse this Helm chart to launch Grafana into a Kubernetes cluster.  It will include this dashboard and many more dashboards to give you visibility into the Kubernetes Cluster. (https://github.com/sekka1/cloud-public/tree/master/kubernetes/pods/grafana-helm)",
-  "editable": true,
-  "gnetId": 6417,
-  "graphTooltip": 1,
-  "id": 2,
-  "iteration": 1574605171391,
-  "links": [
-    {
-      "asDropdown": true,
-      "icon": "external link",
-      "includeVars": true,
-      "keepTime": false,
-      "tags": [
-        "kubernetes-app"
-      ],
-      "title": "Dashboards",
-      "type": "dashboards"
-    }
-  ],
   "panels": [
     {
       "collapsed": false,

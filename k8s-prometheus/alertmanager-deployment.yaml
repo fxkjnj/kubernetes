@@ -34,16 +34,19 @@ spec:
           volumeMounts:
             - name: config-volume
               mountPath: /etc/config
+#自定义告警模板
+            - name: config-template-volume
+              mountPath: /etc/config/template
             - name: storage-volume
               mountPath: "/data"
               subPath: ""
           resources:
             limits:
               cpu: 10m
-              memory: 50Mi
+              memory: 200Mi
             requests:
               cpu: 10m
-              memory: 50Mi
+              memory: 100Mi
         - name: prometheus-alertmanager-configmap-reload
           image: "jimmidyson/configmap-reload:v0.1"
           imagePullPolicy: "IfNotPresent"
@@ -57,14 +60,17 @@ spec:
           resources:
             limits:
               cpu: 10m
-              memory: 10Mi
+              memory: 200Mi
             requests:
               cpu: 10m
-              memory: 10Mi
+              memory: 100Mi
       volumes:
         - name: config-volume
           configMap:
             name: alertmanager-config
+        - name: config-template-volume
+          configMap:
+            name: alertmanager-template-volume
         - name: storage-volume
           persistentVolumeClaim:
             claimName: alertmanager

@@ -8,9 +8,9 @@ data:
     global: 
       resolve_timeout: 5m
       smtp_smarthost: 'smtp.163.com:25'
-      smtp_from: '13057531912@163.com'
-      smtp_auth_username: '13057531912@163.com'
-      smtp_auth_password: 'FMNKBBTDAZWGRIFL'
+      smtp_from: 'test@163.com'
+      smtp_auth_username: 'test@163.com'
+      smtp_auth_password: 'FMNKRBTDAZWGRIFL'
 
     receivers:
     - name: default-receiver

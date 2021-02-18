@@ -18,7 +18,7 @@ kube-state-metrics采集了k8s中各种资源对象的状态信息。
 
 
 # Kubernetes 平台部署的相关组件&yaml
-#### 部署相关组件之前需提前部署好动态PV
+#### 部署相关组件之前需提前部署好动态PV  
 
 ```
 prometheus-deployment.yaml 		#部署Prometheus

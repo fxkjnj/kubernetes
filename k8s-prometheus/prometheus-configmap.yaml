@@ -143,3 +143,4 @@ data:
       alertmanagers:
       - static_configs:
           - targets: ["alertmanager:80"]
+          

@@ -16,8 +16,7 @@ data:
         annotations:
           summary: "Instance {{ $labels.instance }} 停止工作"
           description: "{{ $labels.instance }} job {{ $labels.job }} 已经停止5分钟以上."
-          
-          
+               
   node.rules: |
     groups:
     - name: node.rules

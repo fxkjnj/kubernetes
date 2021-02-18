@@ -6,7 +6,7 @@
 
 ### Pod
 kubelet的节点使用cAdvisor提供的metrics接口获取该节点所有Pod和容器相关的性能指标数据。
-指标接口：https://NodeIP:10250/metrics/cadvisor
+指标接口：https://NodeIP:10250/metrics/cadvisor   
 
 ### Node
 使用node_exporter收集器采集节点资源利用率。

@@ -168,4 +168,4 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: prometheus
-  namespace: ops
+  namespace: ops  

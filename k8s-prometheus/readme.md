@@ -18,7 +18,7 @@ kube-state-metrics采集了k8s中各种资源对象的状态信息。
 
 
 # Kubernetes 平台部署的相关组件&yaml
-#### 部署相关组件之前需提前部署好动态PV  
+#### 部署相关组件之前需提前部署好动态PV
 
 ```
 prometheus-deployment.yaml 		#部署Prometheus
@@ -41,7 +41,7 @@ alertmanager-deployment.yaml 		#部署Alertmanager告警组件
 ![](https://raw.githubusercontent.com/fxkjnj/fxkjnj.github.io/main/%E4%B8%AD%E9%97%B4%E4%BB%B6/kubernetes/dashboard-3.png)
 
 
-
+。。。。。
 
 
 

@@ -15,6 +15,37 @@ kubelet的节点使用cAdvisor提供的metrics接口获取该节点所有Pod和�
 ### K8s资源对象
 kube-state-metrics采集了k8s中各种资源对象的状态信息。
 项目地址：https://github.com/kubernetes/kube-state-metrics
+支持采集如下各种资源对象的状态信息：
+
+.CertificateSigningRequest Metrics
+.ConfigMap Metrics
+.CronJob Metrics
+.DaemonSet Metrics
+.Deployment Metrics
+.Endpoint Metrics
+.Horizontal Pod Autoscaler Metrics
+.Ingress Metrics
+.Job Metrics
+.Lease Metrics
+.LimitRange Metrics
+.MutatingWebhookConfiguration Metrics
+.Namespace Metrics
+.NetworkPolicy Metrics
+.Node Metrics
+.PersistentVolume Metrics
+.PersistentVolumeClaim Metrics
+.Pod Disruption Budget Metrics
+.Pod Metrics
+.ReplicaSet Metrics
+.ReplicationController Metrics
+.ResourceQuota Metrics
+.Secret Metrics
+.Service Metrics
+.StatefulSet Metrics
+.StorageClass Metrics
+.ValidatingWebhookConfiguration Metrics
+.VerticalPodAutoscaler Metrics
+.VolumeAttachment Metrics
 
 
 # Kubernetes 平台部署的相关组件&yaml

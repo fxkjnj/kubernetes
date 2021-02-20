@@ -17,6 +17,7 @@ kube-state-metrics采集了k8s中各种资源对象的状态信息。
 项目地址：https://github.com/kubernetes/kube-state-metrics
 支持采集如下各种资源对象的状态信息：
 
+```
 .CertificateSigningRequest Metrics
 .ConfigMap Metrics
 .CronJob Metrics
@@ -46,7 +47,7 @@ kube-state-metrics采集了k8s中各种资源对象的状态信息。
 .ValidatingWebhookConfiguration Metrics
 .VerticalPodAutoscaler Metrics
 .VolumeAttachment Metrics
-
+```
 
 # Kubernetes 平台部署的相关组件&yaml
 #### 部署相关组件之前需提前部署好动态PV

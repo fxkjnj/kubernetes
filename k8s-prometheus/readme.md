@@ -1,7 +1,7 @@
 # Kubernetes 监控实现思路
 ![](https://raw.githubusercontent.com/fxkjnj/fxkjnj.github.io/main/%E4%B8%AD%E9%97%B4%E4%BB%B6/kubernetes/1.png)
 ![](https://raw.githubusercontent.com/fxkjnj/fxkjnj.github.io/main/%E4%B8%AD%E9%97%B4%E4%BB%B6/kubernetes/2.png)
-
+![](https://www.fxkjnj.com/wp-content/uploads/2021/02/57ac526b116f49d28e7b920730b4b0aa.png)
 
 
 ### Pod

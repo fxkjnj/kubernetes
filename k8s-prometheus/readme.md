@@ -73,7 +73,9 @@ alertmanager-deployment.yaml 		#部署Alertmanager告警组件
 ![](https://raw.githubusercontent.com/fxkjnj/fxkjnj.github.io/main/%E4%B8%AD%E9%97%B4%E4%BB%B6/kubernetes/dashboard-3.png)
 
 
-。。。。。
+altermanager 图
+
+
 
 
 

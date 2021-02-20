@@ -2,7 +2,7 @@
 ![](https://raw.githubusercontent.com/fxkjnj/fxkjnj.github.io/main/%E4%B8%AD%E9%97%B4%E4%BB%B6/kubernetes/1.png)
 ![](https://raw.githubusercontent.com/fxkjnj/fxkjnj.github.io/main/%E4%B8%AD%E9%97%B4%E4%BB%B6/kubernetes/2.png)
 ![](https://www.fxkjnj.com/wp-content/uploads/2021/02/57ac526b116f49d28e7b920730b4b0aa.png)
-
+  
 
 ### Pod
 kubelet的节点使用cAdvisor提供的metrics接口获取该节点所有Pod和容器相关的性能指标数据。

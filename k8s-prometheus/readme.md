@@ -1,7 +1,7 @@
 # Kubernetes 监控实现思路
-![](https://raw.githubusercontent.com/fxkjnj/fxkjnj.github.io/main/%E4%B8%AD%E9%97%B4%E4%BB%B6/kubernetes/1.png)
-![](https://raw.githubusercontent.com/fxkjnj/fxkjnj.github.io/main/%E4%B8%AD%E9%97%B4%E4%BB%B6/kubernetes/2.png)
-![](https://www.fxkjnj.com/wp-content/uploads/2021/02/57ac526b116f49d28e7b920730b4b0aa.png)
+![](http://jpg.fxkjnj.com/soft/kubernetes/1.png)
+![](http://jpg.fxkjnj.com/soft/kubernetes/2.png)
+
   
 
 ### Pod
@@ -66,11 +66,11 @@ alertmanager-deployment.yaml 		#部署Alertmanager告警组件
 
 # Grafana 展示 k8s 监控图
 
-![](https://raw.githubusercontent.com/fxkjnj/fxkjnj.github.io/main/%E4%B8%AD%E9%97%B4%E4%BB%B6/kubernetes/dashboard-1.png)
+![](http://jpg.fxkjnj.com/soft/kubernetes/dashboard-1.png)
 
-![](https://raw.githubusercontent.com/fxkjnj/fxkjnj.github.io/main/%E4%B8%AD%E9%97%B4%E4%BB%B6/kubernetes/dashboard-2.png)
+![](http://jpg.fxkjnj.com/soft/kubernetes/dashboard-2.png)
 
-![](https://raw.githubusercontent.com/fxkjnj/fxkjnj.github.io/main/%E4%B8%AD%E9%97%B4%E4%BB%B6/kubernetes/dashboard-3.png)
+![](http://jpg.fxkjnj.com/soft/kubernetes/dashboard-3.png)
 
 
 altermanager 图

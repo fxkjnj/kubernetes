@@ -15,9 +15,12 @@ kubelet的节点使用cAdvisor提供的metrics接口获取该节点所有Pod和�
 ### K8s资源对象
 kube-state-metrics采集了k8s中各种资源对象的状态信息。
 项目地址：https://github.com/kubernetes/kube-state-metrics
-支持采集如下各种资源对象的状态信息：
+支持采集各种资源对象的状态信息：
+![](http://jpg.fxkjnj.com/soft/kubernetes/kube-state-metrics.png)
+
 
 ```
+下面这些是kube-state-metrics 官方宣称支持的采集对象
 .CertificateSigningRequest Metrics
 .ConfigMap Metrics
 .CronJob Metrics
@@ -49,6 +52,7 @@ kube-state-metrics采集了k8s中各种资源对象的状态信息。
 .VolumeAttachment Metrics
 ```
 
+
 # Kubernetes 平台部署的相关组件&yaml
 #### 部署相关组件之前需提前部署好动态PV
 
@@ -73,9 +77,9 @@ alertmanager-deployment.yaml 		#部署Alertmanager告警组件
 ![](http://jpg.fxkjnj.com/soft/kubernetes/dashboard-3.png)
 
 
-altermanager 图
+# K8S 中部署 altermanager
 
-
+![](http://jpg.fxkjnj.com/soft/prometheus/alertmanager.png)
 
 
 

@@ -17,7 +17,7 @@ jenkins-for_kubernetes
 ## 【prometheus 监控 for  k8s, Grafana 展示 k8s 监控图】
 k8s-prometheus
 
-![]((http://jpg.fxkjnj.com/soft/kubernetes/dashboard-3.png)
+![](http://jpg.fxkjnj.com/soft/kubernetes/dashboard-3.png)
 
 
 ## 【常用yaml 文件】

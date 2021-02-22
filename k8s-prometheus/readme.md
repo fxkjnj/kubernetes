@@ -159,6 +159,7 @@ Prometheus报警功能利用Alertmanager组件完成，当Prometheus会对接收
 
 模拟告警
 
+
 ![](http://jpg.fxkjnj.com/soft/prometheus/alertmanager-1.jpeg)
 
 

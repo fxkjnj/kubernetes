@@ -13,8 +13,16 @@ jenkins-for_kubernetes
 
 ![](http://jpg.fxkjnj.com/soft/jenkins/1.png)
 
+# 【ELK 日志系统收集K8s中日志】
+
+ELK
+
+![](http://jpg.fxkjnj.com/soft/devops-other/ELK.png)
+
+
 
 ## 【prometheus 监控 for  k8s, Grafana 展示 k8s 监控图】
+
 k8s-prometheus
 
 ![](http://jpg.fxkjnj.com/soft/kubernetes/dashboard-3.png)

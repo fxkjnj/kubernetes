@@ -90,7 +90,7 @@ ELK 是三个开源软件的缩写，提供一套完整的企业级日  志平�
       ​		• app-log-logfile.yaml 			# 日志文件的项目案例（nginx-php,这里的nginx 日志不会输入出到控制台，而是直接入到/usr/local/nginx/logs 日志中）
 
 
-<hr1>
+
 ### Kibana登陆后界面：
 
 

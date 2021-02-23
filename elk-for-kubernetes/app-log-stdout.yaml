@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-log-stdout
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      project: microservice
+      app: nginx-stdout
+  template:
+    metadata:
+      labels:
+        project: microservice
+        app: nginx-stdout
+    spec:
+      containers:
+      - name: nginx 
+        image: nginx
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-log-stdout
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    project: microservice
+    app: nginx-stdout

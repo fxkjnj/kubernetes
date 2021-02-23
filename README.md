@@ -15,7 +15,7 @@ jenkins-for_kubernetes
 
 # 【ELK 日志系统收集K8s中日志】
 
-ELK
+ELK-for-kubernetes
 
 ![](http://jpg.fxkjnj.com/soft/devops-other/ELK.png)
 

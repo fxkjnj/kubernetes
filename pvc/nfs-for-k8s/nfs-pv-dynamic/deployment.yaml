@@ -22,7 +22,7 @@ spec:
       serviceAccountName: nfs-client-provisioner
       containers:
         - name: nfs-client-provisioner
-          image: lizhenliang/nfs-client-provisioner:latest
+          image: feixiangkeji974907/nfs-client-provisioner:latest
           volumeMounts:
             - name: nfs-client-root
               mountPath: /persistentvolumes

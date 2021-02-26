@@ -4,7 +4,7 @@ nfs:
   path: /home/elk
 storageClass:
   # 此配置用于绑定 PVC 和 PV
-  name: elk-nfs-client
+  name: elastic-nfs-client
   
   # 资源回收策略
 #主要用于绑定的PVC删除后，资源释放后如何处理该PVC在存储设备上写入的数据。
@@ -14,6 +14,6 @@ storageClass:
   reclaimPolicy: Retain
 # 使用镜像
 image:
-  repository: feixiangkeji974907/nfs-client-provisioner
+  repository: kubesphere/nfs-client-provisioner
 # 副本数量
 replicaCount: 3

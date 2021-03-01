@@ -6,12 +6,12 @@ spec:
   replicas: 3
   selector:
     matchLabels:
-      project: microservice
+      project: stdout-test
       app: nginx-stdout
   template:
     metadata:
       labels:
-        project: microservice
+        project: stdout-test
         app: nginx-stdout
     spec:
       containers:
@@ -28,5 +28,5 @@ spec:
     protocol: TCP
     targetPort: 80
   selector:
-    project: microservice
+    project: stdout-test
     app: nginx-stdout

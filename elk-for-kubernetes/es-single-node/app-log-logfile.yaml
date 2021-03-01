@@ -3,55 +3,44 @@ kind: Deployment
 metadata:
   name: app-log-logfile
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
-      project: microservice
-      app: nginx-logfile
+      project: tomcat-app
+      app: tomcat-logfile
   template:
     metadata:
       labels:
-        project: microservice
-        app: nginx-logfile
+        project: tomcat-app
+        app: tomcat-logfile
     spec:
       containers:
       # 应用容器
-      - name: nginx 
-        image: lizhenliang/nginx-php
+      - name: tomcat-app 
+        image: feixiangkeji974907/tomcat-test:v8
         # 将数据卷挂载到日志目录
         volumeMounts:
-        - name: nginx-logs 
-          mountPath: /usr/local/nginx/logs
+        - name: tomcat-logs
+          mountPath: /usr/local/tomcat/logs
+
       # 日志采集器容器
       - name: filebeat
         image: elastic/filebeat:7.9.2 
-        args: [
-          "-c", "/etc/filebeat.yml",
-          "-e",
-        ]
-        resources:
-          requests:
-            cpu: 100m
-            memory: 100Mi
-          limits:
-            memory: 500Mi
-        securityContext:
-          runAsUser: 0
         volumeMounts:
         # 挂载filebeat配置文件
         - name: filebeat-config
           mountPath: /etc/filebeat.yml
           subPath: filebeat.yml
         # 将数据卷挂载到日志目录
-        - name: nginx-logs 
-          mountPath: /usr/local/nginx/logs
+        - name: tomcat-logs 
+          mountPath: /logs
       # 数据卷共享日志目录
       volumes:
-      - name: nginx-logs
+      - name: tomcat-logs
         emptyDir: {}
       - name: filebeat-config
         configMap:
-          name: filebeat-nginx-config
+          name: filebeat-tomcat-app-config
 ---
 apiVersion: v1
 kind: Service
@@ -61,15 +50,15 @@ spec:
   ports:
   - port: 80
     protocol: TCP
-    targetPort: 80
+    targetPort: 8080
   selector:
-    project: microservice
-    app: nginx-logfile
+    project: tomcat-app
+    app: tomcat-logfile
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: filebeat-nginx-config
+  name: filebeat-tomcat-app-config
   
 data:
   # 配置文件保存在ConfigMap
@@ -77,17 +66,8 @@ data:
     filebeat.inputs:
       - type: log
         paths:
-          - /usr/local/nginx/logs/access.log
-        # tags: ["access"]
-        fields_under_root: true
-        fields:
-          project: microservice
-          app: nginx
-
-    setup.ilm.enabled: false
-    setup.template.name: "nginx-access"
-    setup.template.pattern: "nginx-access-*"
+          - "/logs/*"
 
     output.elasticsearch:
       hosts: ['elasticsearch.ops:9200']
-      index: "nginx-access-%{+yyyy.MM.dd}"
+      index: "tomcat-log"

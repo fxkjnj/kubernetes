@@ -50,7 +50,7 @@ metadata:
   name: es-pvc
   namespace: ops
 spec:
-  storageClassName: "managed-nfs-storage"
+  storageClassName: "elastic-nfs-client"
   accessModes:
     - ReadWriteMany
   resources:

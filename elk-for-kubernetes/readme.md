@@ -717,7 +717,7 @@ mkdir  app-tomcat-filebeat-log
 
 wget https://fxkjnj.com/soft/jdk1.8.0_66.tar.gz
 
-wget https://fxkjnj.com/soft//apache-tomcat-8.5.39.tar.gz
+wget https://fxkjnj.com/soft/apache-tomcat-8.5.39.tar.gz
 
 
 

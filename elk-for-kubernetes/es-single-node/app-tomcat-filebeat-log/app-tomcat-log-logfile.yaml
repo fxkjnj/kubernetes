@@ -1,28 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app-log-logfile
+  name: tomcat-app-logfile
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
-      project: microservice
-      app: nginx-logfile
+      project: tomcat-app
+      app: tomcat-logfile
   template:
     metadata:
       labels:
-        project: microservice
-        app: nginx-logfile
+        project: tomcat-app
+        app: tomcat-logfile
     spec:
       containers:
-      # 应用容器
-      - name: nginx 
-        image: lizhenliang/nginx-php
-        # 将数据卷挂载到日志目录
+      #应用容器
+      - name: tomcat
+        image: feixiangkeji974907/tomcat-test:v8
+        #将数据卷挂载到日志目录
         volumeMounts:
-        - name: nginx-logs 
-          mountPath: /usr/local/nginx/logs
-      # 日志采集器容器
+        - name: tomcat-logs 
+          mountPath: /usr/local/tomcat/logs
+      #日志采集器容器
       - name: filebeat
         image: elastic/filebeat:7.9.2 
         args: [
@@ -43,33 +43,33 @@ spec:
           mountPath: /etc/filebeat.yml
           subPath: filebeat.yml
         # 将数据卷挂载到日志目录
-        - name: nginx-logs 
-          mountPath: /usr/local/nginx/logs
+        - name: tomcat-logs 
+          mountPath: /usr/local/tomcat/logs
       # 数据卷共享日志目录
       volumes:
-      - name: nginx-logs
+      - name: tomcat-logs
         emptyDir: {}
       - name: filebeat-config
         configMap:
-          name: filebeat-nginx-config
+          name: filebeat-tomcat-config
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: app-log-logfile
+  name: tomcat-app-logfile
 spec:
   ports:
   - port: 80
     protocol: TCP
-    targetPort: 80
+    targetPort: 8080
   selector:
-    project: microservice
-    app: nginx-logfile
+    project: tomcat-app
+    app: tomcat-logfile
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: filebeat-nginx-config
+  name: filebeat-tomcat-config
   
 data:
   # 配置文件保存在ConfigMap
@@ -77,17 +77,20 @@ data:
     filebeat.inputs:
       - type: log
         paths:
-          - /usr/local/nginx/logs/access.log
-        # tags: ["access"]
+          - /usr/local/tomcat/logs/localhost_access_log.*
+        # tags: ["access-log"]
+    # fields_under_root，如果值为ture，那么fields 字段存储在输出文档的顶级位置，如果与filebeat中字段冲突，自定义字段会覆盖其他字段
         fields_under_root: true
         fields:
-          project: microservice
-          app: nginx
-
+          project: tomcat-app
+          app: tomcat-logfile
+          
+#自定义ES的索引需要把ilm设置为false
+#定义模板的相关信息
     setup.ilm.enabled: false
-    setup.template.name: "nginx-access"
-    setup.template.pattern: "nginx-access-*"
+    setup.template.name: "tomcat-access"
+    setup.template.pattern: "tomcat-access-*"
 
     output.elasticsearch:
       hosts: ['elasticsearch.ops:9200']
-      index: "nginx-access-%{+yyyy.MM.dd}"
+      index: "tomcat-access-%{+yyyy.MM.dd}"

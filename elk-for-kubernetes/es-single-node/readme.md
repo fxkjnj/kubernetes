@@ -91,7 +91,7 @@ storageClass:
   name: elastic-nfs-client
   
   # 资源回收策略
-#主要用于绑定的PVC删除后，资源释放后如何处理该PVC在存储设备上写入的数据。
+#主要用于绑定的PVC删除后，资源释放后如何处理该PVC在存储设备上写入的数据。 
 #Retain：保留，删除PVC后，PV保留数据；
 #Recycle：回收空间，删除PVC后，简单的清除文件；（NFS和HostPath存储支持）
 #Delete：删除，删除PVC后，与PV相连接的后端存储会删除数据；（AWS EBS、Azure Disk、Cinder volumes、GCE PD支持）

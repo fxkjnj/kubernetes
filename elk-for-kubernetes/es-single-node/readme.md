@@ -716,7 +716,7 @@ Commercial support is available at
 
 
 
-PS:  收集容器中日志文件所需要的Pod Yaml 文件 在/root/kubernetes/elk-for-kubernetes/es-single-node/app-tomcat-filebeat-log目录下 
+PS:  收集容器中日志文件所需要的Pod Yaml 文件 在 https://github.com/fxkjnj/kubernetes/elk-for-kubernetes/es-single-node/app-tomcat-filebeat-log  目录下 
 
 
 

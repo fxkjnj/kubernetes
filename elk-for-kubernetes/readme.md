@@ -179,7 +179,7 @@ replicaCount: 3
 EOF
 
 #helm 部署 nfs-client-provisioner
-[root@master-1 es-single-node]# helm install elastic-nfs-storage -n nfs --values elastic-client.yaml helm-stable/nfs-client-provisioner --version 1.2.8
+[root@master-1 es-single-node]# helm install elastic-nfs-storage -n nfs --values elastic-client-nfs.yaml helm-stable/nfs-client-provisioner --version 1.2.8
 ```
 
 ##### 5.3、查看 nfs-client-provisioner Pod 运行状态

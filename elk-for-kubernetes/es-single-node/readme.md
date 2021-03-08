@@ -724,7 +724,7 @@ PS:  收集容器中日志文件所需要的Pod Yaml 文件 在/root/kubernetes/
 
 PS: 确保本机有docker 的环境, 如果没有部署docker 可以参考我的另一篇文章
 
-https://
+https://www.fxkjnj.com/?p=2732
 
 😁当然如果不想自己制作镜像，也可以使用我制作好的tomcat8 镜像 docker pull feixiangkeji974907/tomcat-test:v8 
 
@@ -845,7 +845,8 @@ Successfully tagged feixiangkeji974907/tomcat-test:v8
 
 
 
-访问tomcat:   http://192.168.31.61，可以看到首页效果
+访问tomcat:   http://192.168.31.61
+可以看到首页效果
 
 ![](http://jpg.fxkjnj.com/soft/kubernetes/tomcat-1.png)
 

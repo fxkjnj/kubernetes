@@ -13,9 +13,9 @@ jenkins-for_kubernetes
 
 ![](http://jpg.fxkjnj.com/soft/jenkins/1.png)
 
-# 【ELK 日志系统收集K8s中日志】
+# 【EFK 日志系统收集K8s中日志】
 
-ELK-for-kubernetes
+EFK-for-kubernetes
 
 ![](http://jpg.fxkjnj.com/soft/devops-other/ELK.png)
 

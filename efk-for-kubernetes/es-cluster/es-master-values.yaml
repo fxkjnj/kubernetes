@@ -32,7 +32,7 @@ persistence:
   enabled: true
 ## 存储数据大小配置
 volumeClaimTemplate:
-  storageClassName: managed-nfs-storage
+  storageClassName: elastic-nfs-client
   accessModes: [ "ReadWriteOnce" ]
   resources:
     requests:

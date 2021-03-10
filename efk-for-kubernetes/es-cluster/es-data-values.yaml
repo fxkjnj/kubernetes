@@ -23,16 +23,16 @@ esJavaOpts: "-Xmx3g -Xms3g"
 resources:
   requests:
     cpu: "1000m"
-    memory: "4Gi"
+    memory: "2Gi"
   limits:
     cpu: "1000m"
-    memory: "4Gi"
+    memory: "2Gi"
 ## 数据持久卷配置
 persistence:
   enabled: true
 ## 存储数据大小配置
 volumeClaimTemplate:
-  storageClassName: managed-nfs-storage
+  storageClassName: elastic-nfs-client
   accessModes: [ "ReadWriteOnce" ]
   resources:
     requests:

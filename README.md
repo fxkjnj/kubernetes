@@ -19,6 +19,8 @@ ELK-for-kubernetes
 
 ![](http://jpg.fxkjnj.com/soft/devops-other/ELK.png)
 
+![](http://jpg.fxkjnj.com/soft/kubernetes/ELK-19.png)
+
 
 
 ## 【prometheus 监控 for  k8s, Grafana 展示 k8s 监控图】

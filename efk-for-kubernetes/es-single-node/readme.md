@@ -660,8 +660,8 @@ https://www.fxkjnj.com/?p=2732
 
 ```
 [root@master-1 es-single-node]# cd app-tomcat-filebeat-log
-[root@master-1 app-tomcat-filebeat-log]# http://jpg.fxkjnj.com/ruanjian/apache-tomcat-8.5.39.tar.gz
-[root@master-1 app-tomcat-filebeat-log]# http://jpg.fxkjnj.com/ruanjian/jdk1.8.0_66.tar.gz
+[root@master-1 app-tomcat-filebeat-log]# wget http://jpg.fxkjnj.com/ruanjian/apache-tomcat-8.5.39.tar.gz
+[root@master-1 app-tomcat-filebeat-log]# wget http://jpg.fxkjnj.com/ruanjian/jdk1.8.0_66.tar.gz
 
 ```
 

@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: tomcat-logfile
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       project: tomcat-app
@@ -24,7 +24,7 @@ spec:
           mountPath: /usr/local/tomcat/logs
       # 日志采集器容器
       - name: filebeat
-        image: elastic/filebeat:7.9.2 
+        image: elastic/filebeat:7.7.1
         args: [
           "-c", "/etc/filebeat.yml",
           "-e",
@@ -91,5 +91,10 @@ data:
     setup.template.pattern: "tomcat-access-*"
 
     output.elasticsearch:
-      hosts: ['elasticsearch.ops:9200']
       index: "tomcat-access-%{+yyyy.MM.dd}"
+      #elasticsearch 用户
+      username: 'elastic'
+      # elasticsearch 密码
+      password: 'elastic123456'
+      # elasticsearch 主机地址,这里要注意了,一定要加上ES的命名空间名称！！！切记
+      hosts: ["elasticsearch-client.efk:9200"]

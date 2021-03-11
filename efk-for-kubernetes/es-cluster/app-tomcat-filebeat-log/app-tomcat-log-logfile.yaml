@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tomcat-logfile
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      project: tomcat-app
+      app: tomcat-logfile
+  template:
+    metadata:
+      labels:
+        project: tomcat-app
+        app: tomcat-logfile
+    spec:
+      containers:
+      # 应用容器
+      - name: tomcat
+        image: feixiangkeji974907/tomcat-test:v8
+        # 将数据卷挂载到日志目录
+        volumeMounts:
+        - name: tomcat-logs 
+          mountPath: /usr/local/tomcat/logs
+      # 日志采集器容器
+      - name: filebeat
+        image: elastic/filebeat:7.9.2 
+        args: [
+          "-c", "/etc/filebeat.yml",
+          "-e",
+        ]
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            memory: 500Mi
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+        # 挂载filebeat配置文件
+        - name: filebeat-config
+          mountPath: /etc/filebeat.yml
+          subPath: filebeat.yml
+        # 将数据卷挂载到日志目录
+        - name: tomcat-logs 
+          mountPath: /usr/local/tomcat/logs
+      # 数据卷共享日志目录
+      volumes:
+      - name: tomcat-logs
+        emptyDir: {}
+      - name: filebeat-config
+        configMap:
+          name: filebeat-tomcat-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-log-logfile
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    project: tomcat-app
+    app: tomcat-logfile
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: filebeat-tomcat-config
+  
+data:
+  # 配置文件保存在ConfigMap
+  filebeat.yml: |-
+    filebeat.inputs:
+      - type: log
+        paths:
+          - /usr/local/tomcat/logs/localhost_access_log.*
+        # tags: ["access-log"]
+        # fields_under_root，如果值为ture，那么fields 字段存储在输出文档的顶级位置，如果与filebeat中字段冲突，自定义字段会覆盖其他字段
+        fields_under_root: true
+        fields:
+          project: tomcat-app
+          app: tomcat-logfile
+        #自定义ES的索引需要把ilm设置为false
+        #定义模板的相关信息
+    setup.ilm.enabled: false
+    setup.template.name: "tomcat-access"
+    setup.template.pattern: "tomcat-access-*"
+
+    output.elasticsearch:
+      hosts: ['elasticsearch.ops:9200']
+      index: "tomcat-access-%{+yyyy.MM.dd}"

@@ -14,7 +14,7 @@ filebeatConfig:
       # elasticsearch 用户
       username: 'elastic'
       # elasticsearch 密码
-      password: 'admin@123'
+      password: 'elastic123456'
       # elasticsearch 主机
       hosts: ["elasticsearch-client:9200"]
 # 环境变量

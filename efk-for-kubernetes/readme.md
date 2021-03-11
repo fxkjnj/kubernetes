@@ -75,7 +75,7 @@ EFK 是三个开源软件的缩写，提供一套完整的企业级日  志平�
 
 ## 六、EFK部署方式
 ### 1、es-single-node 部署ES 单点+ filebeat + kibana 实现Kubernetes应用日志收集
-### 2、es-cluster     Kubernetes Helm3 部署 ElasticSearch集群 & Kibana 7 展示日志
+### 2、es-cluster     Kubernetes Helm3 部署 ElasticSearch集群 & Kibana 7 & Filebeat 收集展示日志
 
 
 

@@ -160,7 +160,7 @@ openssl pkcs12 -nodes -passin pass:'' -in elastic-certificates.p12 -out elastic-
 
 #### 3.2.3 添加证书到集群
 
-😁也可以直接使用我创建好的证书，在 https://github.com/fxkjnj/kubernetes/tree/main/efk-for-kubernetes/es-cluster/certificate 目录下
+😁也可以直接使用我创建好的证书，在https://github.com/fxkjnj/kubernetes/tree/main/helm-for-kubernetes/elasticsearch/certificate 目录下
 
 ```
 #创建ES 集群 专属命名空间
@@ -183,7 +183,7 @@ kubectl create secret generic elastic-credentials \
 
    通过 Helm 安装  需要事先创建一个带有配置参数的 values.yaml 文件。然后再执行 Helm install 安装命令时，指定使用此文件。
 
-👉 ElasticSearch 相关的Yaml 文件，在https://github.com/fxkjnj/kubernetes/tree/main/efk-for-kubernetes/es-cluster/es-cluster-yaml目录下
+👉 ElasticSearch 相关的Yaml 文件，在https://github.com/fxkjnj/kubernetes/tree/main/helm-for-kubernetes/elasticsearch/ 目录下
 
 
 

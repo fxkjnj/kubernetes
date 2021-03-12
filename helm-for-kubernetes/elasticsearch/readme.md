@@ -1,6 +1,4 @@
-
-
-##  Helm3 部署 ElasticSearch集群 & Kibana 7  & Filebeat 收集展示日志
+##  Helm3 部署 ElasticSearch集群 & Kibana7
 
 
 

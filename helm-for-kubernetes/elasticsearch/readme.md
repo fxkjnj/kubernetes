@@ -539,7 +539,7 @@ elasticsearch-master-headless   ClusterIP   None         <none>        9200/TCP,
 
 ​    通过 Helm 安装  需要事先创建一个带有配置参数的 values.yaml 文件。然后再执行 Helm install 安装命令时，指定使用此文件。
 
-👉 Kibana 相关的Yaml 文件，在https://github.com/fxkjnj/kubernetes/tree/main/efk-for-kubernetes/es-cluster/ 目录下
+👉 Kibana 相关的Yaml 文件，在hhttps://github.com/fxkjnj/kubernetes/tree/main/helm-for-kubernetes/elasticsearch/ 目录下
 
 ```
 cat >  es-kibana-values.yaml    << EOF

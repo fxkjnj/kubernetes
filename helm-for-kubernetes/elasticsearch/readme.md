@@ -183,7 +183,7 @@ kubectl create secret generic elastic-credentials \
 
    通过 Helm 安装  需要事先创建一个带有配置参数的 values.yaml 文件。然后再执行 Helm install 安装命令时，指定使用此文件。
 
-👉 ElasticSearch 相关的Yaml 文件，在https://github.com/fxkjnj/kubernetes/tree/main/helm-for-kubernetes/elasticsearch/ 目录下
+👉 ElasticSearch 相关的Yaml 文件，在https://github.com/fxkjnj/kubernetes/tree/main/helm-for-kubernetes/elasticsearch/es-cluster-yaml 目录下
 
 
 

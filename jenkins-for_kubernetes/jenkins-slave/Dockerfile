@@ -1,5 +1,5 @@
 FROM centos:7
-LABEL maintainer lizhenliang
+LABEL fxkjnj.com fxkj
 
 RUN yum install -y java-1.8.0-openjdk maven curl git libtool-ltdl-devel && \ 
     yum clean all && \
@@ -10,6 +10,6 @@ COPY slave.jar /usr/share/jenkins/slave.jar
 COPY jenkins-slave /usr/bin/jenkins-slave
 COPY settings.xml /etc/maven/settings.xml
 RUN chmod +x /usr/bin/jenkins-slave
-COPY helm kubectl /usr/bin/
+COPY kubectl /usr/bin/
 
 ENTRYPOINT ["jenkins-slave"]

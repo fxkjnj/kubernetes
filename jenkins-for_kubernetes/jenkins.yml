@@ -1,7 +1,8 @@
 apiVersion: apps/v1
-kind: Deployment 
+kind: Deployment
 metadata:
   name: jenkins
+  namespace: ops
   labels:
     name: jenkins
 spec:
@@ -15,39 +16,56 @@ spec:
       labels:
         name: jenkins
     spec:
-      terminationGracePeriodSeconds: 10
       serviceAccountName: jenkins
       containers:
         - name: jenkins
-          image: 192.168.31.100/library/jenkins
+          image: jenkins/jenkins
           ports:
             - containerPort: 8080
             - containerPort: 50000
           resources:
             limits:
-              cpu: 1
-              memory: 2Gi
+              cpu: 2
+              memory: 4Gi
             requests:
               cpu: 1
-              memory: 1000Mi
+              memory: 1Gi
           env:
+            - name: LIMITS_MEMORY
+              valueFrom:
+                resourceFieldRef:
+                  resource: limits.memory
+                  divisor: 1Mi
             - name: JAVA_OPTS
-              value: -Xmx1g 
+              value: -Xmx$(LIMITS_MEMORY)m -XshowSettings:vm -Dhudson.slaves.NodeProvisioner.initialDelay=0 -Dhudson.slaves.NodeProvisioner.MARGIN=50 -Dhudson.slaves.NodeProvisioner.MARGIN0=0.85
           volumeMounts:
             - name: jenkins-home
               mountPath: /var/jenkins_home
       securityContext:
         fsGroup: 1000
-        runAsUser: 0
       volumes:
-        - name: jenkins-home
-          persistentVolumeClaim:
-            claimName: jenkins
+      - name: jenkins-home
+        persistentVolumeClaim:
+          claimName: jenkins
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jenkins
+  namespace: ops
+spec:
+  storageClassName: "jenkins-nfs-client"
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: jenkins
+  namespace: ops
 spec:
   selector:
     name: jenkins
@@ -57,21 +75,24 @@ spec:
       port: 80
       targetPort: 8080
       protocol: TCP
-      nodePort: 30006
+      nodePort: 30008
     - name: agent
       port: 50000
       protocol: TCP
+---
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: jenkins
+  namespace: ops
 
 ---
 kind: Role
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: jenkins
+  namespace: ops
 rules:
 - apiGroups: [""]
   resources: ["pods","events"]
@@ -87,10 +108,11 @@ rules:
   verbs: ["get"]
 
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: jenkins
+  namespace: ops
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role

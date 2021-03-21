@@ -16,10 +16,9 @@
 ```
 
 下载准备好软件包（包含所有涉及文件和镜像，比较大），解压到/root目录：
+链接: https://pan.baidu.com/s/1c8lI9A2-NudpR10y9rc2Pw 
+提取码: m1ux
 
-云盘链接：https://pan.baidu.com/s/1uCLylsj1-W2HigS_Tn9b5g 
-提取码：bicc 
-```
 # tar zxf binary_pkg.tar.gz
 ```
 ### 3、修改Ansible文件

@@ -1,7 +1,4 @@
 # Kubernetes v1.20 企业级高可用集群自动部署（离线版）
-代码来源于互联网！！！ K8S 布道者 阿良老师 😃 仅供大家学习，参考😄
-
-
 >### 注：确保所有节点系统时间一致
 
 ### 1、找一台服务器安装Ansible
@@ -19,9 +16,11 @@
 ```
 
 下载准备好软件包（包含所有涉及文件和镜像，比较大），解压到/root目录：
+
 链接: https://pan.baidu.com/s/1c8lI9A2-NudpR10y9rc2Pw 
 提取码: m1ux
 
+```
 # tar zxf binary_pkg.tar.gz
 ```
 ### 3、修改Ansible文件
@@ -92,5 +91,4 @@ k8s-node2     Ready    <none>   9h    v1.20.4
 ### 6.3 所有HTTPS证书存放路径
 部署产生的证书都会存放到目录“ansible-install-k8s-master/ssl”，一定要保存好，后面还会用到~
 
-<br/>
-<br/>
+

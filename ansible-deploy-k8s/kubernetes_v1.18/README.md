@@ -13,9 +13,8 @@
 ```
 
 下载软件包并解压到 /root/binary_pkg 目录下：
-
-链接: https://pan.baidu.com/s/1wtlLynltLCpNVGzSQ0jUJA 
-提取码: y5ad
+链接: https://pan.baidu.com/s/14hKiHi81qcVF3znmZSh-5g 
+提取码: rvbh 
 ```
 # mkdir /root/binary_pkg
 # tar zxf binary_pkg.tar.gz -C /root/binary_pkg

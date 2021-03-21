@@ -1,0 +1,21 @@
+[Unit]
+Description=Etcd Server
+After=network.target
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=notify
+EnvironmentFile={{ etcd_work_dir }}/cfg/etcd.conf
+ExecStart={{ etcd_work_dir }}/bin/etcd \
+        --cert-file={{ etcd_work_dir }}/ssl/server.pem \
+        --key-file={{ etcd_work_dir }}/ssl/server-key.pem \
+        --peer-cert-file={{ etcd_work_dir }}/ssl/server.pem \
+        --peer-key-file={{ etcd_work_dir }}/ssl/server-key.pem \
+        --trusted-ca-file={{ etcd_work_dir }}/ssl/ca.pem \
+        --peer-trusted-ca-file={{ etcd_work_dir }}/ssl/ca.pem
+Restart=on-failure
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

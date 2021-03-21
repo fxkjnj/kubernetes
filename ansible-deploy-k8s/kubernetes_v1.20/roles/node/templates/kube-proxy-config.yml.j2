@@ -1,0 +1,11 @@
+kind: KubeProxyConfiguration
+apiVersion: kubeproxy.config.k8s.io/v1alpha1
+bindAddress: 0.0.0.0
+metricsBindAddress: {{ inventory_hostname }}:10249
+clientConnection:
+  kubeconfig: {{ k8s_work_dir }}/cfg/kube-proxy.kubeconfig
+hostnameOverride: {{ node_name }} 
+clusterCIDR: {{ pod_cidr }}
+#mode: ipvs
+#ipvs:
+#  scheduler: "rr"

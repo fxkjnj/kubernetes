@@ -1,0 +1,56 @@
+---
+- name: 0.系统初始化
+  gather_facts: false
+  hosts: all 
+  roles:
+    - common
+  tags: common 
+
+- name: 1.自签证书 
+  gather_facts: false
+  hosts: localhost 
+  roles:
+    - tls
+  tags: tls
+
+- name: 2.部署Docker
+  gather_facts: false
+  hosts: k8s 
+  roles:
+    - docker 
+  tags: docker
+
+- name: 3.部署ETCD集群
+  gather_facts: false
+  hosts: etcd
+  roles:
+    -  etcd
+  tags: etcd
+
+- name: 4.部署K8S Master
+  gather_facts: false
+  hosts: master
+  roles:
+    - master
+  tags: master
+
+- name: 5. 部署Nginx负载均衡并高可用
+  gather_facts: false
+  hosts: lb
+  roles:
+    - ha
+  tags: ha
+
+- name: 6.部署K8S Node
+  gather_facts: false
+  hosts: k8s 
+  roles:
+    - node
+  tags: node
+
+- name: 7.部署插件
+  gather_facts: false
+  hosts: master
+  roles:
+    - addons
+  tags: addons

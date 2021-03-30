@@ -12,6 +12,7 @@ ansible-deploy-k8s
 jenkins-for_kubernetes
 
 ![](http://jpg.fxkjnj.com/soft/jenkins/1.png)
+![](http://jpg.fxkjnj.com/soft/jenkins/java-demo-1.png)
 
 # 【EFK 日志系统收集K8s中日志】
 

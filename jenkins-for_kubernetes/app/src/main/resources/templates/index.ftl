@@ -8,9 +8,9 @@
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>应用案例</title>
+    <title>永远相信，美好的事情即将发生</title>
 
-    <meta name="description" content="应用案例">
+    <meta name="description" content="永远相信，美好的事情即将发生">
 
     <meta name="keywords" content="index">
 

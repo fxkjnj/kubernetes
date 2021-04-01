@@ -1105,8 +1105,7 @@ Successfully tagged feixiangkeji974907/tomcat-test:v8
 
 访问tomcat: [http://192.168.31.61](http://192.168.31.61/) 可以看到首页效果
 
-[![img](https://camo.githubusercontent.com/04a6d2bcb3e95104658dc05b61e2eb0973ad118b69b73e323b0f661e1f785e87/687474703a2f2f6a70672e66786b6a6e6a2e636f6d2f736f66742f6b756265726e657465732f746f6d6361742d312e706e67)](https://camo.githubusercontent.com/04a6d2bcb3e95104658dc05b61e2eb0973ad118b69b73e323b0f661e1f785e87/687474703a2f2f6a70672e66786b6a6e6a2e636f6d2f736f66742f6b756265726e657465732f746f6d6361742d312e706e67)
-
+![](http://jpg.fxkjnj.com/soft/kubernetes/tomcat-1.png)
 
 
 ### 4.3.2 制作项目镜像，上传镜像至Harbor仓库

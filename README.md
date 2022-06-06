@@ -1,4 +1,4 @@
-❥(^_-)  v1
+❥(^_-)  v2
 
 分享一些 平时工作中的K8S 运维经验，yaml 文件； 详细内容 请关注 我的个人博客 ： https://fxkjnj.com
 
@@ -34,5 +34,12 @@ k8s-prometheus
 ## 【常用yaml 文件】
 yaml
 
+##  【常用yaml 文件】
+k8s1.24.1_cri-docker
+![image-20220508094933949](http://jpg.fxkjnj.com/picgo/202206010947754.png)
+
+
+
+* ❥(^_-)   2022/06/06 新增加 kubeadm 部署Kubernetes1.24_cri-docker版本
 * ❥(^_-)   2022/04/26  修改一些BUG
 * ❥(^_-)   2021/03/30

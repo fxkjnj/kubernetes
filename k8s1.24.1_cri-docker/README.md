@@ -106,8 +106,8 @@ cat >> /etc/hosts <<EOF
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 172.16.200.30 k8s-master01
-172.16.200.31 k8s-node1
-172.16.200.32 k8s-node2
+172.16.201.31 k8s-node1
+172.16.201.32 k8s-node2
 EOF
 
 ```
@@ -476,9 +476,8 @@ Requires=cri-docker.socket
 [Service]
 Type=notify
 
-ExecStart=/usr/bin/cri-dockerd --container-runtime-endpoint=unix:///var/run/cri-docker.sock --network-plugin=cni --cni-bin-dir=/opt/cni/bin \
-          --cni-conf-dir=/etc/cni/net.d --image-pull-progress-deadline=30s --pod-infra-container-image=registry.aliyuncs.com/google_containers/pause:3.7 \
-          --docker-endpoint=unix:///var/run/docker.sock --cri-dockerd-root-directory=/var/lib/docker
+ExecStart=/usr/bin/cri-dockerd --network-plugin=cni --pod-infra-container-image=registry.aliyuncs.com/google_containers/pause:3.7
+
 ExecReload=/bin/kill -s HUP $MAINPID
 TimeoutSec=0
 RestartSec=2
@@ -513,7 +512,7 @@ Description=CRI Docker Socket for the API
 PartOf=cri-docker.service
 
 [Socket]
-ListenStream=/var/run/cri-dockerd.sock
+ListenStream=%t/cri-dockerd.sock
 SocketMode=0660
 SocketUser=root
 SocketGroup=docker
@@ -525,7 +524,7 @@ EOF
 
 ```
 
-【也可以直接下载https://github.com/Mirantis/cri-dockerd/tree/master/packaging/systemd 注意，需要修改cri-docker.service 中 ExecStart 启动参数，另外cri-docker.socket 文件中也要指明 ListenStream 的地址cri-dockerd.sock
+【也可以直接下载https://github.com/Mirantis/cri-dockerd/tree/master/packaging/systemd 注意，需要修改cri-docker.service 中 ExecStart 启动参数，这里/usr/bin/cri-dockerd一定要加上参数--pod-infra-container-image=registry.aliyuncs.com/google_containers/pause:3.7用来指定所用的pause镜像是哪个，否则默认拉取k8s.gcr.io/pause:3.6，会导致安装失败。
 
 
 
@@ -811,15 +810,15 @@ I0604 10:03:37.136354    2673 kubelet.go:214] the value of KubeletConfiguration.
 [certs] Using certificateDir folder "/etc/kubernetes/pki"
 [certs] Generating "ca" certificate and key
 [certs] Generating "apiserver" certificate and key
-[certs] apiserver serving cert is signed for DNS names [kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local master-1] and IPs [10.96.0.1 172.16.201.30]
+[certs] apiserver serving cert is signed for DNS names [kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local master-1] and IPs [10.96.0.1 172.16.200.30]
 [certs] Generating "apiserver-kubelet-client" certificate and key
 [certs] Generating "front-proxy-ca" certificate and key
 [certs] Generating "front-proxy-client" certificate and key
 [certs] Generating "etcd/ca" certificate and key
 [certs] Generating "etcd/server" certificate and key
-[certs] etcd/server serving cert is signed for DNS names [localhost master-1] and IPs [172.16.201.30 127.0.0.1 ::1]
+[certs] etcd/server serving cert is signed for DNS names [localhost master-1] and IPs [172.16.200.30 127.0.0.1 ::1]
 [certs] Generating "etcd/peer" certificate and key
-[certs] etcd/peer serving cert is signed for DNS names [localhost master-1] and IPs [172.16.201.30 127.0.0.1 ::1]
+[certs] etcd/peer serving cert is signed for DNS names [localhost master-1] and IPs [172.16.200.30 127.0.0.1 ::1]
 [certs] Generating "etcd/healthcheck-client" certificate and key
 [certs] Generating "apiserver-etcd-client" certificate and key
 [certs] Generating "sa" key and public key
@@ -897,11 +896,59 @@ config
 
 
 
-### 2.3.8  集群网络准备
+### 2.3.8  集群工作节点添加
 
 
 
-#### 2.3.8.1  calico安装
+```
+[root@k8s-node1 ~]# kubeadm join 172.16.200.30:6443 --token 8x4o2u.hslo8xzwwlrncr8s \                              --discovery-token-ca-cert-hash sha256:7323a8b0658fc33d89e627f078f6eb16ac94394f9a91b3335dd3ce73a3f313a0 --cri-socket unix:///var/run/cri-dockerd.sock
+```
+
+
+
+```
+[root@k8s-node2 ~]# kubeadm join 172.16.200.30:6443 --token 8x4o2u.hslo8xzwwlrncr8s \
+        --discovery-token-ca-cert-hash sha256:7323a8b0658fc33d89e627f078f6eb16ac94394f9a91b3335dd3ce73a3f313a0 --cri-socket unix:///var/run/cri-dockerd.sock
+```
+
+注意： 必须要加上 --cri-socket unix:///var/run/cri-dockerd.sock ，不然会报错
+
+
+
+```
+[root@k8s-master01 ~]# kubectl get nodes
+NAME           STATUS     ROLES           AGE     VERSION
+k8s-master01   NotReady   control-plane   2m24s   v1.24.1
+k8s-node1      NotReady   <none>          23s     v1.24.1
+k8s-node2      NotReady   <none>          2s      v1.24.1
+
+```
+
+
+
+
+
+### 2.3.9  去除污点，设置master节点参与调度
+
+```
+#查看污点 
+kubectl describe node master | grep -i taint
+Taints:             node-role.kubernetes.io/master:NoSchedule
+
+#去除污点
+ kubectl taint node k8s-master01 node-role.kubernetes.io/master:NoSchedule-
+
+```
+
+
+
+
+
+### 2.3.10  集群网络准备
+
+
+
+#### 2.3.10.1  calico安装
 
 ```
 wget https://docs.projectcalico.org/manifests/calico.yaml --no-check-certificate
@@ -947,7 +994,7 @@ kube-scheduler-master-1                    1/1     Running   2             35m
 
 
 
-#### 2.3.8.2  calico客户端安装
+#### 2.3.10.2  calico客户端安装
 
 
 
@@ -986,57 +1033,29 @@ Cluster Type:      k8s,bgp,kubeadm,kdd
 $ DATASTORE_TYPE=kubernetes 
 $ KUBECONFIG=~/.kube/config 
 $ calicoctl get nodes
-NAME
-k8s-master01
+NAME           
+k8s-master01   
+k8s-node1      
+k8s-node2      
 ```
 
 
 
 
 
-### 2.3.9  集群工作节点添加
-
-> 因容器镜像下载较慢，可能会导致报错，主要错误为没有准备好cni（集群网络插件），如有网络，请耐心等待即可。
 
 
-
-```
-[root@k8s-node1 ~]# kubeadm join 172.16.200.30:6443 --token 8x4o2u.hslo8xzwwlrncr8s \                              --discovery-token-ca-cert-hash sha256:7323a8b0658fc33d89e627f078f6eb16ac94394f9a91b3335dd3ce73a3f313a0 --cri-socket unix:///var/run/cri-dockerd.sock
-```
-
-
-
-```
-[root@k8s-node2 ~]# kubeadm join 172.16.200.30:6443 --token 8x4o2u.hslo8xzwwlrncr8s \
-        --discovery-token-ca-cert-hash sha256:7323a8b0658fc33d89e627f078f6eb16ac94394f9a91b3335dd3ce73a3f313a0 --cri-socket unix:///var/run/cri-dockerd.sock
-```
-
-注意： 必须要加上 --cri-socket unix:///var/run/cri-dockerd.sock ，不然会报错
-
-
-
-```
-在master节点上操作，查看网络节点是否添加
-# DATASTORE_TYPE=kubernetes KUBECONFIG=~/.kube/config calicoctl get nodes
-NAME
-k8s-master01
-k8s-node1
-k8s-node2
-```
-
-
-
-
-
-### 2.3.10 验证集群可用性
+### 2.3.11 验证集群可用性
 
 ```
 查看所有的节点
+
 [root@k8s-master01 ~]# kubectl get nodes
 NAME           STATUS   ROLES           AGE   VERSION
-k8s-master01   Ready    control-plane   12h   v1.24.1
-k8s-node1   Ready    <none>          12h   v1.24.1
-k8s-node2   Ready    <none>          12h   v1.24.1
+k8s-master01   Ready    control-plane   28m   v1.24.1
+k8s-node1      Ready    <none>          26m   v1.24.1
+k8s-node2      Ready    <none>          26m   v1.24.1
+
 ```
 
 
@@ -1050,6 +1069,21 @@ controller-manager   Healthy   ok
 scheduler            Healthy   ok
 etcd-0               Healthy   {"health":"true","reason":""}
 ```
+
+
+
+### 2.3.12  k8s其他设置
+
+> kubectl 命令自动补齐
+
+```
+yum install bash-completion -y
+source /usr/share/bash-completion/bash_completion
+source <(kubectl completion bash)
+kubectl completion bash >/etc/bash_completion.d/kubectl
+```
+
+
 
 
 
